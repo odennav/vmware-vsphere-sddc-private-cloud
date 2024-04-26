@@ -412,12 +412,13 @@ Syslog parameter settings defined by using the vSphere Client or VMware Host Cli
 Namespaces are managed by `wcp` service which is needed for maintenance mode operations.
 
 Implement the following steps:
-1. Generate SSH key pair
-   Save public key as `~/.ssh/id_rsa.pub`
+
+1. Generate SSH key pair and save public key as `~/.ssh/id_rsa.pub`
+   
    *This key will also be used for terraform null provisioner*
 
    ```bash
-   ssh-keygen -o -t rsa
+   ssh-keygen -t rsa -b 4096
    ```
 
 2. Log in as root through an SSH or console session on the vCenter Server Appliance.
