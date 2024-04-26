@@ -76,7 +76,7 @@ The different options available for accessing the installation media and booting
 Check this guide [here](https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.esxi.install.doc/GUID-6E6BCACF-33CA-4466-90B7-73CCA37BB5E1.html)
 to thoroughly understand the different ways of deployment.
 
-We'll implement `Interactive ESXi installation` with `VMware Workstation` for small deployment of just 2 hosts in this project.
+We'll implement `Interactive ESXi installation` with `VMware Workstation` for small deployment of 3 hosts in this project.
 
 
 3. **ESXi Requirements**
