@@ -4,7 +4,7 @@ SDDC(Software-Defined Data Center) is an architecture that enables a fully autom
 
 It's a special kind of data storage and computing facility where major components, including CPU, storage, networking, and security, are all virtualized and provided as a service using intelligent software.
 
-**The three main components of VMware SDDC**
+**Main Components of VMware SDDC**
 
 Server Virtualization with VMware's vSphere
 Storage Virtualization with VMware vSAN 
