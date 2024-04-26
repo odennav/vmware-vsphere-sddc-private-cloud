@@ -1,8 +1,8 @@
 # SDDC VMware Lab
 
-SDDC(Software-Defined Data Center) is an architecture that enables a fully automated, zero-downtime infrastructure for any application.
+SDDC (Software Defined Data Center) is an architecture that allows for any application's infrastructure to be fully automated and always available.
 
-It's a special kind of data storage and computing facility where major components, including CPU, storage, networking, and security, are all virtualized and provided as a service using intelligent software.
+It's a special kind of data storage and computing facility in which basic components such as CPU, storage, networking, security are all virtualized and delivered as services via smart software.
 
 **Main Components of VMware SDDC**
 
@@ -15,12 +15,12 @@ It's a special kind of data storage and computing facility where major component
 ![](https://github.com/odennav/vmware-sddc-private-cloud/blob/main/docs/datacenter.PNG)
 
 
-The objective of this project is harness VMware infrastructure to provide private cloud hosting solutions for your home lab.
-You'll also find relevant guides for other means of large-scale VMware deployments.
+The objective of this project is to utilize VMware infrastructure for private cloud hosting solutions in your home lab. 
+You'll also find relevant guides on alternative large-scale VMware deployments.
 
 The two core components of vSphere are `ESXi` and `vCenter Server`.
 
-ESXi is the virtualization platform on which you can create and run virtual machines and virtual appliances.
+ESXi is the virtualization platform to make virtual machines and virtual appliances.
 
 The vCenter server appliance is a preconfigured virtual machine optimized for running vCenter server and the vCenter server components.
 vCenter server is a service that lets you pool and manage the resources of multiple hosts.
