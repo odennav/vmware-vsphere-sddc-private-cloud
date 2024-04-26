@@ -6,9 +6,11 @@ It's a special kind of data storage and computing facility where major component
 
 **Main Components of VMware SDDC**
 
-Server Virtualization with VMware's vSphere
-Storage Virtualization with VMware vSAN 
-Network Virtualization with VMware NSX
+- Server Virtualization with VMware's vSphere
+
+- Storage Virtualization with VMware vSAN 
+
+- Network Virtualization with VMware NSX
 
 ![](https://github.com/odennav/vmware-sddc-private-cloud/blob/main/docs/datacenter.PNG)
 
