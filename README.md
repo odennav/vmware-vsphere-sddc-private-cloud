@@ -838,10 +838,12 @@ terraform apply vm*
 
 -----
 
-## Next Steps
+### Next Steps
 
 NSX-T Setup and Configuration
 
+
+-----
 
 ### Media Options for Booting the ESXi Installer(Optional)
 
