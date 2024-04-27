@@ -152,7 +152,7 @@ Once your virtual machine is up and running, follow the next steps to finish the
 
 6. Confirm the installation by pressing `F11`.
 
-7. Once complete, you must remove the installation media. You can remove it by clicking `I Finished Installing` on the bottom left side of the VMware Workstation window.
+7. Once complete, you must remove the installation media. You can remove it by clicking `I Finished Installing` at the bottom right side of the VMware Workstation window.
 
 After removing your installation media, go back to the virtual machine installation screen and hit `Enter` to reboot. The VM will shutdown and reboot.
 
