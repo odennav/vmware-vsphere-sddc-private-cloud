@@ -197,6 +197,7 @@ We're installing and configuring three ESXi hosts, hence you'll have to repeat t
 
 Also note when you're configuring subsequent esxi, remember to change the `Hostname` in `DNS Configuration` section. For example second and third esxi will be named esxi02 and esxi03 respectively.
 
+Please note the hardware specifications for esxi03 will be different and bigger than other hosts because we'll deploy the vcsa on it.
 
 -----
 
@@ -222,8 +223,8 @@ Our system must meet specific software and hardware requirements.
 
 1. Download the vCenter Installer from [Customer Connect account](https://my.vmware.com/web/vmware/)
 
-2. Hardware requirements:
-   This depends on the size of your vSphere inventory.
+2. Hardware requirements of ESXi Host:
+   This depends on the size of your vSphere inventory for ESXi03.
    - We'll use `Tiny Environment`(for up to 10 hosts or 100 virtual machines)
    - 18GB Memory (14GB minimum)
    - Default storage size of 579GB minimum
@@ -369,14 +370,20 @@ Edit the template file for your specification. View sample below:
 4. Run a pre-deployment check without deploying the appliance to verify that you prepared the deployment template correctly.
 
    ```console
-   vcsa-deploy install --accept-eula --precheck-only C:\VMware-VCSA-all-7.0.2\vcsa-cli-installer\templates\install\embedded_vCSA_on_ESXi.json
+   cd C:\VMware-VCSA-all-7.0.0-16189094\vcsa-cli-installer\win32
+   vcsa-deploy install --accept-eula --precheck-only C:\VMware-VCSA-all-7.0.0-16189094\vcsa-cli-installer\templates\install\embedded_vCSA_on_ESXi.json
    ```
+   Press `1` to accept SHA-1 thumbprint of the certificate.
+
+   View pre-check task completed.
+
 
 5. Perform template verification
 
    ```console
-   vcsa-deploy install --accept-eula --verify-template-only C:\VMware-VCSA-all-7.0.2\vcsa-cli-installer\templates\install\embedded_vCSA_on_ESXi.json
+   vcsa-deploy install --accept-eula --verify-template-only C:\VMware-VCSA-all-7.0.0-16189094\vcsa-cli-installer\templates\install\embedded_vCSA_on_ESXi.json
    ```
+   View template-validation task completed.
 
 6. Create directory to store output of files that the installer generates
    ```console
@@ -386,7 +393,7 @@ Edit the template file for your specification. View sample below:
 7. Run the deployment command
 
    ```console
-   vcsa-deploy install --accept-eula  --log-dir=C:\VCSA-logs C:\Users\Admin\Downloads\VMware-VCSA-all-8.0.2-23319993\vcsa-cli-installer\templates\install\embedded_vCSA_on_ESXi.json
+   vcsa-deploy install --accept-eula  --log-dir=C:\VCSA-logs C:\VMware-VCSA-all-7.0.0-16189094\vcsa-cli-installer\templates\install\embedded_vCSA_on_ESXi.json
    ```
 -----
 
