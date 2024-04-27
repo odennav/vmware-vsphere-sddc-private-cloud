@@ -125,8 +125,13 @@ For a complete list of supported processors and server platforms, see the VMware
 
 5. Select 'store virtual disk as a single file` and specify disk capacity of 200GB. Click `Next`.
 
-6. Click on `Customize Hardware` and select `Memory` size of 12GB, 2 CPU cores & Processors
-   as minimum. choose `NAT` as network adapter type.  Also select `Power on this virtual machine after creation`. Click `Finish`.
+6. Click on `Customize Hardware` and select `Memory` size of 12GB, 2 CPU cores & Processors as minimum. 
+   
+   Use `Bridged` networ connection.
+
+7. Select `Power on this virtual machine after creation`.
+   
+   Click `Finish`.
 
 
 ### Installing ESXi in VMware Workstation
