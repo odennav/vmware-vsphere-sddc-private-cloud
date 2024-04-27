@@ -119,7 +119,7 @@ For a complete list of supported processors and server platforms, see the VMware
 
 2. Open your VMware Workstation, click on `Create a New Virtual Machine`
 
-3. Select 'Installer disc image file (iso):` and click `Browse...` to find the VMware ESXi iso in your directory. Click `Next`.
+3. Select `Installer disc image file (iso):` and click `Browse...` to find the VMware ESXi iso in your directory. Click `Next`.
 
 4. Name the virtual machine as `ESXi-1` and select `Location` you want the ESXi installed.   Click `Next`.
 
