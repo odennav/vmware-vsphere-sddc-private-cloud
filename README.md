@@ -160,9 +160,10 @@ After removing your installation media, go back to the virtual machine installat
 
 ## Configure ESXi on Hosts
 
-After the reboot is complete and the ESXi virtual machine is running, note the IP address of the ESXi host server. Dynamic host configuration protocol (DHCP) assigns the IP address the VMware ESXiserver uses when it is initialized. 
+After the reboot is complete and the ESXi virtual machine is running, note the IP address of the ESXi host server.
+Dynamic host configuration protocol (DHCP) assigns the IP address the VMware ESXi server uses when it is initialized. 
 
-You can use the IP address assigned from DHCP, or as an alternative, you can set up a static IP addressof your choice by following these steps.
+You can use the IP address assigned from DHCP, or as an alternative, you can set up a static IP address of your choice by following these steps.
 
 1. In the running ESXi virtual machine, press `F2`.
 
@@ -286,7 +287,7 @@ Mac:
 
 3. Use the `vcsa-cli-installer\templates\install\embedded_vCSA_on_ESXi.json` template to deploy single instance of VCSA on our second ESXi host.
 
-Edit the template file for your specification. View sample of the manifest we'll use below:
+Edit the template file for your specification. View sample below:
 
 ```yaml
 {
@@ -294,7 +295,7 @@ Edit the template file for your specification. View sample of the manifest we'll
     "__comments": "Template to deploy a vCenter Server Appliance with an embedded Platform Services Controller on an ESXi host.",
     "new_vcsa": {
         "esxi": {
-            "hostname": "esxi03.localdomain",
+            "hostname": "<FQDN or IP address of the ESXi host on which to deploy the new appliance>",
             "username": "root",
             "password": "**********",
             "deployment_network": "VM Network",
@@ -312,20 +313,20 @@ Edit the template file for your specification. View sample of the manifest we'll
             "ip_family": "ipv4",
             "mode": "static",
             "system_name": "",
-            "ip": "192.168.149.7",
+            "ip": "<Static IP address for the appliance.>",
             "prefix": "24",
-            "gateway": "192.168.149.2",
+            "gateway": "<Gateway IP address.>",
             "dns_servers": [
-                "192.168.149.2"
+                "<DNS Server IP address.>"
             ]
         },
         "os": {
-            "password": "veinvkrv%$wr428@",
+            "password": "**********",
             "ntp_servers": "time.nist.gov",
             "ssh_enable": true
         },
         "sso": {
-            "password": "Csgmtehmtrpe61395$%",
+            "password": "**********",
             "domain_name": "odennav.local"
         }
     },
