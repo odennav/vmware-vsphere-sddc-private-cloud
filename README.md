@@ -123,9 +123,11 @@ For a complete list of supported processors and server platforms, see the VMware
 
 4. Name the virtual machine as `ESXi-1` and select `Location` you want the ESXi installed.   Click `Next`.
 
-5. Select 'store virtual disk as a single file` and specify disk capacity of 200GB. Click `Next`.
+5. Select `store virtual disk as a single file` and specify disk capacity of 200GB. Click `Next`.
 
-6. Click on `Customize Hardware` and select `Memory` size of 12GB, 2 CPU cores & Processors as minimum. 
+6. Click on `Customize Hardware` and select `Memory` size of 12GB, 2 Processor cores as minimum.
+   
+   Select `Virtualize Intel VT-x/EPT or AMD-V/RVI`
    
    Use `Bridged` network connection.
 
