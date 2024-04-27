@@ -32,25 +32,25 @@ vCenter server is a service that lets you pool and manage the resources of multi
 
 To ensure a successful VMware deployment, note the workflow required:
 
-1. Prepare for ESXi installation.
+1. Prepare for ESXi Installation.
 
-2. Install ESXi on hosts.
+2. Install ESXi on Hosts.
 
-3. Configure ESXi on hosts.
+3. Configure ESXi on Hosts.
 
-4. Prepare for vCenter installation.
+4. Prepare for vCenter Installation.
 
-4. Deploy vCenter server appliance.
+5. Deploy vCenter Server Appliance.
 
-5. Configure system logging.
+6. Configure System Logging.
 
-6. Manage vCenter Server Services
+7. Manage vCenter Server Services
 
-7. Enable vSphere vSAN and DRS(Distributed Resource Scheduler)
+8. Enable vSphere vSAN and DRS(Distributed Resource Scheduler)
 
-8. Enable vSphere HA(High Availability) and SRDS
+9. Enable vSphere HA(High Availability) and Storage DRS
 
-9. Provision Windows and Linux VMs to vSphere cluster
+10. Provision Windows and Linux VMs to vSphere Cluster
 
 
 
@@ -127,7 +127,7 @@ For a complete list of supported processors and server platforms, see the VMware
 
 6. Click on `Customize Hardware` and select `Memory` size of 12GB, 2 CPU cores & Processors as minimum. 
    
-   Use `Bridged` networ connection.
+   Use `Bridged` network connection.
 
 7. Select `Power on this virtual machine after creation`.
    
@@ -604,11 +604,11 @@ terraform apply first-deploy.tf
 
 -----
 
-## Enable vSphere HA(High Availability) and SRDS
+## Enable vSphere HA(High Availability) and Storage DRS
 
 High Availability is a utility that provides uniform, cost-effective failover protection against hardware and operating system outages within your virtualized IT environment.
 
-High Availability allows you to:
+vSphere HA allows you to:
  
 - Monitor VMware vSphere hosts and virtual machines to detect hardware and guest operating system failures.
 
