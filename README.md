@@ -294,7 +294,7 @@ Edit the template file for your specification. View sample below:
     "__comments": "Template to deploy a vCenter Server Appliance with an embedded Platform Services Controller on an ESXi host.",
     "new_vcsa": {
         "esxi": {
-            "hostname": "https://esxi02.localdomain",
+            "hostname": "esxi02.localdomain",
             "username": "root",
             "password": "**********",
             "deployment_network": "VM Network",
@@ -311,7 +311,7 @@ Edit the template file for your specification. View sample below:
         "network": {
             "ip_family": "ipv4",
             "mode": "static",
-            "system_name": "https://vcenter.odennav.local",
+            "system_name": "vcenter.odennav.local",
             "ip": "<Static IP address for the appliance.>",
             "prefix": "24",
             "gateway": "<Gateway IP address.>",
