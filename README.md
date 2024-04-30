@@ -294,11 +294,11 @@ Edit the template file for your specification. View sample below:
     "__comments": "Template to deploy a vCenter Server Appliance with an embedded Platform Services Controller on an ESXi host.",
     "new_vcsa": {
         "esxi": {
-            "hostname": "<FQDN or IP address of the ESXi host on which to deploy the new appliance>",
+            "hostname": "https://esxi02.localdomain",
             "username": "root",
             "password": "**********",
             "deployment_network": "VM Network",
-            "datastore": "datastore3"
+            "datastore": "datastore2"
         },
         "appliance": {
             "__comments": [
@@ -306,12 +306,12 @@ Edit the template file for your specification. View sample below:
             ],
             "thin_disk_mode": true,
             "deployment_option": "tiny",
-            "name": "Embedded-vCenter-Server-Appliance"
+            "name": "vCenter-Server-Appliance"
         },
         "network": {
             "ip_family": "ipv4",
             "mode": "static",
-            "system_name": "",
+            "system_name": "https://vcenter.odennav.local",
             "ip": "<Static IP address for the appliance.>",
             "prefix": "24",
             "gateway": "<Gateway IP address.>",
