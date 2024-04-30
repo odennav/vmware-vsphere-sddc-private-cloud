@@ -46,11 +46,9 @@ To ensure a successful VMware deployment, note the workflow required:
 
 7. Manage vCenter Server Services
 
-8. Enable vSphere vSAN and DRS(Distributed Resource Scheduler)
+8. Create Compute Cluster and Enable Distributed Solutions(vSphere vSAN, DRS, SDRS)
 
-9. Enable vSphere HA(High Availability) and Storage DRS
-
-10. Provision Windows and Linux VMs to vSphere Cluster
+9. Provision Windows and Linux VMs to vSphere Compute Cluster
 
 
 
@@ -490,7 +488,8 @@ The  Policy Based Management(PBM) service is required for cloning a virtual mach
 
 -----
 
-##  Enable vSphere vSAN and DRS(Distributed Resource Scheduler)
+##  Create Compute Cluster and Enable Distributed Solutions(vSphere vSAN, DRS, SDRS)
+
 
 VMware vSAN is a distributed layer of software that runs natively as a part of the ESXi hypervisor. It uses a software-defined approach that creates shared storage for virtual machines.
 
@@ -499,10 +498,15 @@ It virtualizes the local physical storage resources of ESXi hosts and turns them
 VMware vSphere Distributed Resource Scheduler (DRS) is the resource scheduling and load balancing solution for vSphere.
 DRS works on a cluster of ESXi hosts and provides resource management capabilities like load balancing and virtual machine (VM) placement.
 
+
+Storage DRS allows you to manage the aggregated resources of a datastore cluster.
+When Storage DRS is enabled, it provides recommendations for virtual machine disk placement and migration to balance space and I/O resources across the datastores in the datastore cluster.
+
+
 We'll implement the following to enable this solutions in vSphere:
 
 - Install Terraform
-- Create Datacenter Cluster and enable vSAN and DRS
+- Create Datacenter Cluster and enable vSAN, DRS and SDRS
 
 
 **Install Terraform**
@@ -594,27 +598,27 @@ terraform init
 
 Format your configuration
 ```bash
-terraform fmt first-deploy.tf
+terraform fmt 
 ```
 
 Validate your configuration
 ```bash
-terraform validate first-deploy.tf
+terraform validate 
 ```
 
 Create an execution plan that describes the planned changes to the vSphere infrastructure
 ```bash
-terraform plan first-deploy.tf
+terraform plan 
 ```
 
 Apply the configuration 
 ```bash
-terraform apply first-deploy.tf
+terraform apply --auto-approve
 ```
 
 -----
 
-## Enable vSphere HA(High Availability) and Storage DRS
+### Enable vSphere HA(High Availability)
 
 High Availability is a utility that provides uniform, cost-effective failover protection against hardware and operating system outages within your virtualized IT environment.
 
@@ -628,67 +632,7 @@ vSphere HA allows you to:
 
 We initialy disabled vSphere HA before enabling vSAN on the cluster. 
 
-Next we can re-enable vSphere HA after vSAN is configured, with manifest below:
 
-```yaml
-
-provider "vsphere" {
-  user                 = administrator@odennav.local
-  password             = **********
-  vsphere_server       = vcenter.odennav.local
-  allow_unverified_ssl = true
-}
-
-
-variable "datacenter" {
-  default = "odennav-dc"
-}
-
-
-data "vsphere_datacenter" "datacenter" {
-  name = var.datacenter
-}
-
-
-resource "vsphere_compute_cluster" "compute_cluster" {
-  name            = "odennav-dc-cluster"
-  datacenter_id   = data.vsphere_datacenter.datacenter.id
-  ha_enabled      = true # Enable HA
-  }
-
-
-resource "vsphere_datastore_cluster" "datastore_cluster" {
-  name            = "odennav-datastore-cluster"
-  datacenter_id   = data.vsphere_datacenter.datacenter.id
-  sdrs_enabled    = true
-  }
-
-```
-
-Storage DRS allows you to manage the aggregated resources of a datastore cluster.
-When Storage DRS is enabled, it provides recommendations for virtual machine disk placement and migration to balance space and I/O resources across the datastores in the datastore cluster.
-
-Implement the following:
-
-Format your configuration
-```bash
-terraform fmt second-deploy.tf
-```
-
-Validate your configuration
-```bash
-terraform validate second-deploy.tf
-```
-
-Create an execution plan that describes the planned changes to the vSphere infrastructure
-```bash
-terraform plan second-deploy.tf
-```
-
-Apply the configuration 
-```bash
-terraform apply second-deploy.tf
-```
 
 -----
 
@@ -836,22 +780,22 @@ View packer_windows2019 and packer_ubuntu20 VM templates created in vSphere web 
 
 Format your configuration
 ```bash
-terraform fmt vm*
+terraform fmt
 ```
 
 Validate your configuration
 ```bash
-terraform validate vm*
+terraform validate 
 ```
 
 Create an execution plan that describes the planned changes to the vSphere infrastructure
 ```bash
-terraform plan vm*
+terraform plan 
 ```
 
 Apply the configuration 
 ```bash
-terraform apply vm*
+terraform apply 
 ```
 
 -----
@@ -891,3 +835,4 @@ NSX-T Setup and Configuration
 
 
 Enjoy!
+
