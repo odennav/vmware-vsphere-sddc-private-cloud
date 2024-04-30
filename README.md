@@ -127,7 +127,7 @@ For a complete list of supported processors and server platforms, see the VMware
    
    Select `Virtualize Intel VT-x/EPT or AMD-V/RVI`
    
-   Use `Bridged` network connection.
+   Use `Bridged` or `NAT` network connection.
 
 7. Select `Power on this virtual machine after creation`.
    
@@ -144,7 +144,7 @@ Once your virtual machine is up and running, follow the next steps to finish the
 
 3. Select the `Local` disk where ESXi will be installed and hit Enter.
 
-4. Choose your keyboard layout and hit Enter.
+4. Choose your `keyboard` layout and hit Enter.
 
 5. Enter your `Root password`, confirm it and securely store it. Press `Enter`.
 
@@ -193,9 +193,9 @@ You can use the IP address assigned from DHCP, or as an alternative, you can set
 
 We're installing and configuring three ESXi hosts, hence you'll have to repeat the `Interactive Installation Step` twice to get total of three ESXi hosts powered on and running.
 
-Also note when you're configuring subsequent esxi, remember to change the `Hostname` in `DNS Configuration` section. For example second and third esxi will be named esxi02 and esxi03 respectively.
+Also note when you're configuring subsequent ESXi, remember to change the `Hostname` in `DNS Configuration` section. For example second and third ESXi will be named `esxi02` and `esxi03` respectively.
 
-Please note the hardware specifications for esxi03 will be different and bigger than other hosts because we'll deploy the vcsa on it.
+Please note the hardware specifications for esxi02 will be different and bigger than other hosts because we'll deploy the vcsa on it.
 
 -----
 
