@@ -369,7 +369,7 @@ Edit the template file for your specification. View sample below:
 
    ```console
    cd C:\VMware-VCSA-all-8.0.2\vcsa-cli-installer\win32
-   vcsa-deploy install --accept-eula --precheck-only C:\VMware-VCSA-all-7.0.0-16189094\vcsa-cli-installer\templates\install\embedded_vCSA_on_ESXi.json
+   vcsa-deploy install --accept-eula --precheck-only C:\VMware-VCSA-all-8.0.2\vcsa-cli-installer\templates\install\embedded_vCSA_on_ESXi.json
    ```
    Press `1` to accept SHA-1 thumbprint of the certificate.
 
