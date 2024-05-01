@@ -453,7 +453,7 @@ Implement the following steps:
    cp /etc/vmware/wcp/wcpsvc.yaml /etc/vmware/wcp/wcpsvc.yaml.bak
    ```
 
-6. Change this line `rhttpproxy_port: {rhttpproxy.ext.port2}` in the above yaml file to `rhttpproxy_port: 443` 
+6. Open the `wcpsvc.yaml` file and confirm the value of `rhttpproxy_port` is `443` 
 
 
 7. Start service staus of `wcp`
