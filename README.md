@@ -521,63 +521,6 @@ Verify Chocolatey installation
 choco -help
 ```
 
-Before we implement Terraform, view the configuration that creates a datacenter cluster and enables vSphere vSAN with DRS:
-
-```yaml
-
-provider "vsphere" {
-  user                 = administrator@odennav.local
-  password             = **********
-  vsphere_server       = vcenter.odennav.local
-  allow_unverified_ssl = true
-}
-
-variable "datacenter" {
-  default = "odennav-dc"
-}
-
-variable "hosts" {
-  default = [
-    "esxi01.localdomain",
-    "esxi02.localdomain",
-    "esxi03.localdomain",
-  ]
-}
-
-
-data "vsphere_host" "host" {
-  count         = length(var.hosts)
-  name          = var.hosts[count.index]
-  datacenter_id = data.vsphere_datacenter.datacenter.id
-}
-
-
-resource "vsphere_datacenter" "datacenter" {
-  name = var.datacenter
-}
-
-resource "vsphere_compute_cluster" "compute_cluster" {
-  name            = "odennav-dc-cluster"
-  datacenter_id   = data.vsphere_datacenter.datacenter.id
-  host_system_ids = [data.vsphere_host.host.*.id]
-
-  drs_enabled          = true
-  drs_automation_level = "fullyAutomated"
-
-  ha_enabled = false # Initially disable HA
-
-  vsan_enabled = true
-  vsan_dedup_enabled = true
-  vsan_compression_enabled = true
-  vsan_performance_enabled = true
-  vsan_verbose_mode_enabled = true
-  vsan_network_diagnostic_mode_enabled = true
-  vsan_dit_encryption_enabled = true
-  vsan_dit_rekey_interval = 1800
-  }
-
-```
-
 Install the Terraform package on git bash.
 ```bash
 choco install terraform
@@ -618,23 +561,6 @@ terraform apply --auto-approve
 
 -----
 
-### Enable vSphere HA(High Availability)
-
-High Availability is a utility that provides uniform, cost-effective failover protection against hardware and operating system outages within your virtualized IT environment.
-
-vSphere HA allows you to:
- 
-- Monitor VMware vSphere hosts and virtual machines to detect hardware and guest operating system failures.
-
-- Restart virtual machines on other vSphere hosts in the cluster without manual intervention when a server outage is detected.
-
-- Reduce application downtime by automatically restarting virtual machines upon detection of an operating system failure.
-
-We initialy disabled vSphere HA before enabling vSAN on the cluster. 
-
-
-
------
 
 ## Provision Windows and Linux VMs to vSphere Cluster
 
