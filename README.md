@@ -422,7 +422,7 @@ Syslog parameter settings defined by using the vSphere Client or VMware Host Cli
 
 **Enable Maintenance Mode Operations**
 
-Namespaces are managed by `wcp` service which is needed for maintenance mode operations.
+Workload Control Plane(wcp) service is needed for maintenance mode operations.
 
 Implement the following steps:
 
@@ -493,11 +493,8 @@ The  Policy Based Management(PBM) service is required for cloning a virtual mach
 
 VMware vSAN is a distributed layer of software that runs natively as a part of the ESXi hypervisor. It uses a software-defined approach that creates shared storage for virtual machines.
 
-It virtualizes the local physical storage resources of ESXi hosts and turns them into pools of storage that can be divided and assigned to virtual machines and applications according to their quality-of-service requirements. vSAN is implemented directly in the ESXi hypervisor.
-
 VMware vSphere Distributed Resource Scheduler (DRS) is the resource scheduling and load balancing solution for vSphere.
 DRS works on a cluster of ESXi hosts and provides resource management capabilities like load balancing and virtual machine (VM) placement.
-
 
 Storage DRS allows you to manage the aggregated resources of a datastore cluster.
 When Storage DRS is enabled, it provides recommendations for virtual machine disk placement and migration to balance space and I/O resources across the datastores in the datastore cluster.
