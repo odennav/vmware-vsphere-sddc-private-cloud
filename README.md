@@ -686,28 +686,28 @@ build {
 Initialize your Packer configuration
 
 ```bash
-cd ~/vmware-vsphere-/packer/win2016/
-packer init template*
+cd ~/vmware-vsphere-/packer/
+packer init 
 ```
 
 Ensure template has consistent format
 
 ```bash
-packer fmt template*
+packer fmt 
 ```
 
 Ensure your configuration is syntactically valid and internally consistent
 
 ```bash
-packer validate template*
+packer validate 
 ```
 
 Build image
 ```bash
-packer build template*
+packer build 
 ```
 
-View packer_windows2019 and packer_ubuntu20 VM templates created in vSphere web client.
+View packer_windows2019 and packer_ubuntu20 VM templates created in vSphere inventory.
 
 
 **Provision VMs to vSphere Custer**
