@@ -8,7 +8,7 @@ It's a special kind of data storage and computing facility in which basic compon
 
 - Server Virtualization with VMware's vSphere
 
-- Storage Virtualization with VMware vSAN 
+- Resource Sharing with VMware vSphere HA and Storage DRS 
 
 - Network Virtualization with VMware NSX
 
@@ -46,7 +46,7 @@ To ensure a successful VMware deployment, note the workflow required:
 
 7. Manage vCenter Server Services
 
-8. Create Compute Cluster & Enable Distributed Solutions(vSAN, DRS, SDRS)
+8. Create Compute Cluster & Enable Resource Sharing Solutions(HA, DRS, SDRS)
 
 9. Provision Windows and Linux VMs to vSphere Compute Cluster
 
@@ -488,7 +488,7 @@ The  Policy Based Management(PBM) service is required for cloning a virtual mach
 
 -----
 
-##  Create Compute Cluster & Enable Distributed Solutions(vSAN, DRS, SDRS)
+##  Create Compute Cluster & Enable Resource Sharing Solutions(HA, DRS, SDRS)
 
 
 VMware vSAN is a distributed layer of software that runs natively as a part of the ESXi hypervisor. It uses a software-defined approach that creates shared storage for virtual machines.
