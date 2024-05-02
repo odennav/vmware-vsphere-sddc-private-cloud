@@ -491,7 +491,16 @@ The  Policy Based Management(PBM) service is required for cloning a virtual mach
 ##  Create Compute Cluster & Enable Resource Sharing Solutions(HA, DRS, SDRS)
 
 
-VMware vSAN is a distributed layer of software that runs natively as a part of the ESXi hypervisor. It uses a software-defined approach that creates shared storage for virtual machines.
+High Availability is a utility that provides uniform, cost-effective failover protection against hardware and operating system outages within your virtualized IT environment.
+
+vSphere HA allows you to:
+
+- Monitor VMware vSphere hosts and virtual machines to detect hardware and guest operating system failures.
+
+- Restart virtual machines on other vSphere hosts in the cluster without manual intervention when a server outage is detected.
+
+- Reduce application downtime by automatically restarting virtual machines upon detection of an operating system failure.
+
 
 VMware vSphere Distributed Resource Scheduler (DRS) is the resource scheduling and load balancing solution for vSphere.
 DRS works on a cluster of ESXi hosts and provides resource management capabilities like load balancing and virtual machine (VM) placement.
@@ -500,10 +509,12 @@ Storage DRS allows you to manage the aggregated resources of a datastore cluster
 When Storage DRS is enabled, it provides recommendations for virtual machine disk placement and migration to balance space and I/O resources across the datastores in the datastore cluster.
 
 
-We'll implement the following to enable this solutions in vSphere:
+We'll implement the following to enable this solutions in vSphere using Terraform:
 
 - Install Terraform
-- Create Datacenter Cluster and enable vSAN, DRS and SDRS
+- Create Datacenter
+- Create Datacenter cluster and add ESXi hosts
+- Enable vHA, DRS and SDRS
 
 
 **Install Terraform**
