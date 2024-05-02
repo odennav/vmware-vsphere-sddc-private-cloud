@@ -246,32 +246,6 @@ Supported Guest Operating Systems
 - Mac OS
 
 
-**System Requirements for the GUI and CLI Installers**
-
-Windows:
-
-- Windows 8, 8.1, 10
-- Windows 2016 server x64 bit
-- Windows 2019 server x64 bit
-- 4 GB RAM, 2 CPU having 4 cores with 2.3 GHz, 32 GB hard disk, 1 NIC
-- Visual C++ redistributable libraries need to be installed to run the CLI installer on versions of Windows older than Windows 10. The Microsoft installers for these libraries are located in the `vcsa-cli-installer/win32/vcredist` directory
-- Deploying the vCenter Server appliance with the GUI requires a minimum resolution of
-`1024x768` to properly display. Lower resolutions can truncate the UI elements.
-
-Linux:
-
-- SUSE 15
-- Ubuntu 16.04 and 18.04(64-bit OS)
-- 4 GB RAM, 1 CPU having 2 cores with 2.3 GHz, 16 GB hard disk, 1 NIC
-
-Mac:
-
-- macOS v10.13, 10.14, 10.15
-- macOS High Sierra, Mojave, Catalina
-- 8 GB RAM, 1 CPU having 4 cores with 2.4 GHz, 150 GB hard disk, 1 NIC
-- For client machines that run on Mac 10.13 or later, concurrent GUI deployments of multiple appliances are unsupported. You must deploy the appliances in a sequence.
-
-
 **Running the vCenter Server Appliance Installer**
 
 1. Navigate to your root directory and extract contents of the `VMware-VCSA` iso file downloaded from VMware Customer Connect account.
