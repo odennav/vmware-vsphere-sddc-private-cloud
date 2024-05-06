@@ -1,4 +1,4 @@
-# SDDC VMware Lab
+# VMware SDDC Cloud Lab
 
 SDDC (Software Defined Data Center) is an architecture that allows for any application's infrastructure to be fully automated and always available.
 
@@ -48,7 +48,7 @@ To ensure a successful VMware deployment, note the workflow required:
 
 8. NFS Storage Server Setup
 
-9. Create Compute Cluster & Enable Resource Sharing Solutions(HA, DRS, SDRS)
+9. Compute Cluster & Resource Sharing Solutions(vHA, DRS, SDRS)
 
 10. Provision Windows and Linux VMs to vSphere Compute Cluster
 
@@ -472,8 +472,9 @@ This switch is required to handle the networking configuration for all ESXi host
 We'll implement the following:
 - Create a vSphere Distributed Switch
 - Create Distributed Port Groups
+- Add Hosts to the vSwitch.
 - Create VMkernel Adapters
-- Associate Hosts with the vSwitch.
+
 
 ### Create a vSphere Distributed Switch
 
@@ -537,31 +538,8 @@ Repeat steps above to create port groups for other ESXi services listed above.
 Also configure the default port group to handle `VM traffic`.
 
 
-### Create VMkernel Adapters
 
-Setup networking TCP/IP stack for the vMotion ESXi service
-
-**Procedure**
-
-- In the vSphere Client, select esxi01 host.
-
-- Under `Manage`, select `Networking` and then select `VMkernel adapters`.
-
-- Click `Add host networking`.
-
-- On the `Select connection type` page, select `VMkernel Network Adapter` and click `Next`.
-
-- On the `Select target device` page, select the existing vSwitch, **`Odennav-DSwitch`**
-
-- On the `Port` properties, enable **`vMotion`** Traffic and select Next.
-
-- Configure network settings for the vMotion VMkernel interface, use a unique IP address for host's vMotion interface. and click `Next`. 
-  Note: it is not recommended to override the default gateway.
-
-- Review the settings and click `Finish`.
-
-
-### Associate Hosts with the vSwitch
+### Add Hosts to the vSwitch
 
 We'll connect the physical NICs, VMkernel adapters and virtual machine network adapters of the hosts to the distributed switch.
 
@@ -596,6 +574,31 @@ On the `Manage VMkernel adapters` page, configure VMkernel adapters.
 To apply the port group to all hosts in the cluster, select **`Apply this port group assignment to the rest of the hosts`**.
 
 Click `OK`and save this configuration.
+
+
+
+### Create VMkernel Adapters
+
+Setup networking TCP/IP stack for the vMotion ESXi service
+
+**Procedure**
+
+- In the vSphere Client, select esxi01 host.
+
+- Under `Manage`, select `Networking` and then select `VMkernel adapters`.
+
+- Click `Add host networking`.
+
+- On the `Select connection type` page, select `VMkernel Network Adapter` and click `Next`.
+
+- On the `Select target device` page, select the created port-group, **`DPortGroup-vMotion`** associatd with **`Odennav-DSwitch`**
+
+- On the `Port` properties, enable **`vMotion`** Traffic and select Next.
+
+- Configure network settings for the vMotion VMkernel interface, use a unique IP address for host's vMotion interface. and click `Next`.
+  Note: it is not recommended to override the default gateway.
+
+- Review the settings and click `Finish`.
 
 
 -----
@@ -783,6 +786,7 @@ Implement the following steps to create XFS partition on disk for Heartbeat:
    Confirm the file sytem table is defined for our new filesystems to be mounted at system boot and normal operations.
 
    Check `/etc/fstab` and confirm entries for both `/dev/sdb1` and `/dev/sdc1` filesystems.
+   
    If not available, add them as shown below:
 
    Copy config file
@@ -802,6 +806,7 @@ Implement the following steps to create XFS partition on disk for Heartbeat:
    ```
 
    **Configure Exports Configuration File**
+   
    Check `/etc/exports` file used by NFS server to define the directories and options that it will export to NFS clients.
 
    Copy config file
@@ -864,7 +869,7 @@ Implement the following steps to create XFS partition on disk for Heartbeat:
 
 -----
 
-##  Create Compute Cluster & Enable Resource Sharing Solutions(HA, DRS, SDRS)
+##  Compute Cluster & Resource Sharing Solutions(vHA, DRS, SDRS)
 
 
 High Availability is a utility that provides uniform, cost-effective failover protection against hardware and operating system outages within your virtualized IT environment.
@@ -889,8 +894,11 @@ We'll implement the following to enable this solutions in vSphere using Terrafor
 
 - Install Terraform
 - Create Datacenter
-- Create Datacenter cluster and add ESXi hosts
+- Provision Datacenter cluster and add ESXi hosts
+- Create Datastore cluster
 - Enable vHA, DRS and SDRS
+- Add NFS shares to Datastore Cluster
+- Create Inventory tags
 
 
 **Install Terraform**
@@ -1223,7 +1231,7 @@ C:\VMware-ovftool-4.4.3-18663434-win.x86_64\ovftool>ovftool \
 --X:logLevel=trivia 
 --ipProtocol=IPv4 
 --ipAllocationPolicy="fixedPolicy" C:\NSX-T Data Center 3.2.3.1\nsx-embedded-unified-appliance-3.2.3.1.0.22104638.ova \
-'vi://Administrator@vsphere.local:Csgmtehmtrpe61395$%@192.168.36.6/odennav-datacenter/host/Install/192.168.36.5/
+'vi://Administrator@vsphere.local:<vcenter-password>@192.168.36.6/odennav-datacenter/host/Install/192.168.36.5/
 ```
 
 The result should look something like this:
@@ -1364,7 +1372,7 @@ Type --------------> VDS
 
 Mode --------------> Standard
 
-Name --------------> vcenter.odennav.local    Switch -----> vOdennav
+Name --------------> vcenter.odennav.local     &&    Switch -----> Odennav-DSwitch
 
 Transport Zone ----> Overlay-Zone
 
@@ -1404,7 +1412,7 @@ Now we've successfully configured our chosen transport nodes and uplinks on vDS 
 
 ### Next Steps
 
-NSX-T Edge Nodes
+NSX-T Edge Nodes Setup
 
 -----
 
