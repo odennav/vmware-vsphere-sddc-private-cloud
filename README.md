@@ -1083,7 +1083,7 @@ Build image
 packer build 
 ```
 
-View packer_windows2019 and packer_ubuntu20 VM templates created in vSphere inventory.
+View `packer_windows2019` and `packer_ubuntu20` VM templates created in vSphere inventory.
 
 
 **Provision VMs to vSphere Custer**
@@ -1112,16 +1112,19 @@ terraform apply
 
 ## NSX-T Setup and Configuration
 
- NSX network virtualization programmatically creates and manages virtual networks.
-With network virtualization, the functional equivalent of a network hypervisor reproduces the 
+NSX network virtualization programmatically creates and manages virtual networks.
+
+Using network virtualization, the functional equivalent of a network hypervisor we can reproduce the 
 complete set of Layer 2 through Layer 7 networking services (for example, switching, routing, 
 access control, firewalling, QoS) in software.
 
-NSX works by implementing three separate but integrated planes: management, control, and 
-data.
+NSX works by implementing three separate but integrated planes: management, control and 
+data planes
 
 These planes are implemented as a set of processes, modules, and agents residing on two 
-types of nodes: NSX Manager and transport nodes.
+types of nodes: 
+- NSX Manager 
+- Transport Nodes.
 
 **Requirements**
 
@@ -1130,9 +1133,10 @@ Note the following resources we'll need to configure NSX-T for this project:
 - Two datacenter clusters:
 
   Workload cluster(3 ESXi hosts)
+  
   Edge cluster(1 ESXi host)
 
-- vDS(Virtual Distributed Switch) over workload cluster, With six portgroups available for:
+- vDS(Virtual Distributed Switch) over workload cluster, With six port-groups available for:
   - Management
   - vMotion
   - Provisioning
@@ -1220,7 +1224,7 @@ C:\VMware-ovftool-4.4.3-18663434-win.x86_64\ovftool>ovftool \
 --ipProtocol=IPv4 
 --ipAllocationPolicy="fixedPolicy" C:\NSX-T Data Center 3.2.3.1\nsx-embedded-unified-appliance-3.2.3.1.0.22104638.ova \
 'vi://Administrator@vsphere.local:Csgmtehmtrpe61395$%@192.168.36.6/odennav-datacenter/host/Install/192.168.36.5/
-
+```
 
 The result should look something like this:
 
