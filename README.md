@@ -481,7 +481,8 @@ We'll implement the following:
 
 - Navigate to a data center in the vSphere Client
 
-- Right-click the data center and select `**Distributed Switch**` > `**New Distributed Switch**`.
+- Right-click the data center and select **`Distributed Switch`** > **`New Distributed Switch`**.
+
 Enter `Odennav-DSwitch` as name for the new distributed switch.
 
 Enter version `8.0` for the distributed switch.
@@ -490,7 +491,7 @@ In `Configure Settings`, enter value of `2` as number of uplinks ports.
 
 Review the settings and Click `Finish`.
 
-Right-click the distributed switch just created and select `**Settings**` > `**Edit settings**`.
+Right-click the distributed switch just created and select **`Settings`** > **`Edit settings`**.
 
 On the Advanced tab, enter a value of more than `1700` as the MTU value and click `OK`.
 The MTU size must be 1700 or greater on any network that carries overlay traffic.
@@ -513,17 +514,17 @@ Note their VLAN IDs
 
 - Navigate to a data center in the vSphere Client
 
-- Right-click the distributed switch and select `**Distributed Port Group**` > `**New Distributed Port Group**`.
+- Right-click the distributed switch and select **`Distributed Port Group`** > **`New Distributed Port Group`**.
 
 - Create a port group for the vMotion. Name it `DPortGroup-vMotion`.
 
 - Set `VLAN Type` as VLAN Trunking.
 
-- Accept the default VLAN trunk range `(0-4094)`. Set `VLAN ID` to `**5**`.
+- Accept the default VLAN trunk range `(0-4094)`. Set `VLAN ID` to **`5`**.
 
 - Click `Next`, then click `Finish`.
 
-- Right-click the distributed switch, `**Odennav-DSwitch**`, select `**Distributed Port Group**` > `**Manage Distributed Port Groups**`.
+- Right-click the distributed switch, **`Odennav-DSwitch`**, select **`Distributed Port Group`** > **`Manage Distributed Port Groups`**.
 
 - Select `Teaming and failover` and click `Next`.
 
@@ -550,9 +551,9 @@ Setup networking TCP/IP stack for the vMotion ESXi service
 
 - On the `Select connection type` page, select `VMkernel Network Adapter` and click `Next`.
 
-- On the `Select target device` page, select the existing vSwitch,`**Odennav-DSwitch**`
+- On the `Select target device` page, select the existing vSwitch, **`Odennav-DSwitch`**
 
-- On the `Port` properties, enable `**vMotion**` Traffic and select Next.
+- On the `Port` properties, enable **`vMotion`** Traffic and select Next.
 
 - Configure network settings for the vMotion VMkernel interface, use a unique IP address for host's vMotion interface. and click `Next`. 
   Note: it is not recommended to override the default gateway.
@@ -566,7 +567,7 @@ We'll connect the physical NICs, VMkernel adapters and virtual machine network a
 
 **Procedure**
 
-- In the vSphere Client, navigate to `**Networking**` tab and select the distributed switch.
+- In the vSphere Client, navigate to **`Networking`** tab and select the distributed switch.
 
 - From the `Actions` menu, select `Add and Manage Hosts`.
 
@@ -582,7 +583,7 @@ On the `Manage physical adapters` page, we'll configure physical NICs on the dis
 
 - Select an uplink. Assign `Uplink 1` to `vmnic0` and `Uplink 2` to `vmnic1`
 
-- To assign the uplink to all the hosts in the cluster, select `**Apply this uplink assignment to the rest of the hosts**`.
+- To assign the uplink to all the hosts in the cluster, select **`Apply this uplink assignment to the rest of the hosts`**.
 
 - Click `OK`, then `Next`
 
@@ -592,7 +593,7 @@ On the `Manage VMkernel adapters` page, configure VMkernel adapters.
 
 - Select the `DPortGroup-vMotion` distributed port group.
 
-To apply the port group to all hosts in the cluster, select `**Apply this port group assignment to the rest of the hosts**`.
+To apply the port group to all hosts in the cluster, select **`Apply this port group assignment to the rest of the hosts`**.
 
 Click `OK`and save this configuration.
 
@@ -670,7 +671,7 @@ Click `OK`and save this configuration.
 We'll create new disk and add to server inventory.
 This disk will be used to setup NFS datastore.
 
-- Go to `*Player*` > `*Manage*` > `*Virtual Machine Settings*` at top left of VMware workstartion.
+- Go to **`Player`** > **`Manage`** > **`Virtual Machine Settings`** at top left of VMware workstartion.
 - Click `Add...` at bottom left
 - In the popped up `Add Hardware Wizard`, select `Hard Disk` hardware type and click `Next`
 - Select `SCSI` as virtual disk type and click `Next`
@@ -681,6 +682,7 @@ This disk will be used to setup NFS datastore.
 Notice new `Hard Disk(SCSI)` with size 100GB added to hardware inventory.
 
 Repeat steps above to add another `Hard Disk(SCSI)` with size 5GB.
+
 This disk will be used to setup Heartbeat datastore.
 
 Reboot CentOS server
@@ -796,7 +798,7 @@ Implement the following steps to create XFS partition on disk for Heartbeat:
 
    ```bash
    /dev/sdb1	/nfs-share-1	xfs	defaults	0	0
-   /dev/sdc1	/hb-share-1	xfs	defaults	0	0
+   /dev/sdc1	/hb-share-1     xfs	defaults	0	0
    ```
 
    **Configure Exports Configuration File**
@@ -1130,8 +1132,7 @@ Note the following resources we'll need to configure NSX-T for this project:
   Workload cluster(3 ESXi hosts)
   Edge cluster(1 ESXi host)
 
-- vDS(Virtual Distributed Switch) over workload cluster:
-  With five portgroups for:
+- vDS(Virtual Distributed Switch) over workload cluster, With six portgroups available for:
   - Management
   - vMotion
   - Provisioning
@@ -1239,7 +1240,7 @@ After deployment, verify that the NSX ManagerNSX Manager UI comes up by accessin
 following URL, https://192.168.36.40 on your browser.
 
 
-### NSX IP Pools Setup 
+### NSX IP-Pools Setup 
 
 We'll setup IP pools to assign Tunnel Endpoints to each of our ESXi hosts that are participating in the NSX Overlay networks.
 
