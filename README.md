@@ -42,14 +42,17 @@ To ensure a successful VMware deployment, note the workflow required:
 
 5. Deploy vCenter Server Appliance.
 
-6. Configure System Logging.
+6. Manage vCenter Server Services
 
-7. Manage vCenter Server Services
+7. vSphere Distributed Switch Setup
 
-8. Create Compute Cluster & Enable Resource Sharing Solutions(HA, DRS, SDRS)
+8. NFS Storage Server Setup
 
-9. Provision Windows and Linux VMs to vSphere Compute Cluster
+9. Create Compute Cluster & Enable Resource Sharing Solutions(HA, DRS, SDRS)
 
+10. Provision Windows and Linux VMs to vSphere Compute Cluster
+
+11. NSX-T Setup and Configuration
 
 
 ## Prepare for ESXi Installation
@@ -367,9 +370,9 @@ Edit the template file for your specification. View sample below:
    ```console
    vcsa-deploy install --accept-eula  --log-dir=C:\VCSA-Logs C:\VMware-VCSA-all-8.0.2\vcsa-cli-installer\templates\install\embedded_vCSA_on_ESXi.json
    ```
------
 
-## Configure System Logging.
+
+### Configure System Logging.
 
 We'll use the vSphere Client to configure the syslog service globally and edit various advanced settings.
 
@@ -459,6 +462,537 @@ The  Policy Based Management(PBM) service is required for cloning a virtual mach
    ```bash
    service-control --restart vmware-sps
    ```
+
+-----
+
+## vSphere Distributed Switch Setup
+
+This switch is required to handle the networking configuration for all ESXi hosts.
+
+We'll implement the following:
+- Create a vSphere Distributed Switch
+- Create Distributed Port Groups
+- Create VMkernel Adapters
+- Associate Hosts with the vSwitch.
+
+### Create a vSphere Distributed Switch
+
+**Procedure**
+
+- Navigate to a data center in the vSphere Client
+
+- Right-click the data center and select `**Distributed Switch**` > `**New Distributed Switch**`.
+Enter `Odennav-DSwitch` as name for the new distributed switch.
+
+Enter version `8.0` for the distributed switch.
+
+In `Configure Settings`, enter value of `2` as number of uplinks ports.
+
+Review the settings and Click `Finish`.
+
+Right-click the distributed switch just created and select `**Settings**` > `**Edit settings**`.
+
+On the Advanced tab, enter a value of more than `1700` as the MTU value and click `OK`.
+The MTU size must be 1700 or greater on any network that carries overlay traffic.
+
+
+### Create Distributed Port Groups
+
+We'll create port groups for each of the following ESXi services below:
+Note their VLAN IDs
+
+- vMotion (VLAN-ID=5)
+- Provisioning (VLAN-ID=6)
+- Fault Tolerance (VLAN-ID=7)
+- vSAN (VLAN-ID=8)
+- Management (VLAN-ID=9)
+- NSX Tunnel Endpoints (VLAN-ID=100)
+- NSX Edge Uplink (VLAN-ID=101)
+
+**Procedure to Create vMotion Port Group**
+
+- Navigate to a data center in the vSphere Client
+
+- Right-click the distributed switch and select `**Distributed Port Group**` > `**New Distributed Port Group**`.
+
+- Create a port group for the vMotion. Name it `DPortGroup-vMotion`.
+
+- Set `VLAN Type` as VLAN Trunking.
+
+- Accept the default VLAN trunk range `(0-4094)`. Set `VLAN ID` to `**5**`.
+
+- Click `Next`, then click `Finish`.
+
+- Right-click the distributed switch, `**Odennav-DSwitch**`, select `**Distributed Port Group**` > `**Manage Distributed Port Groups**`.
+
+- Select `Teaming and failover` and click `Next`.
+
+- Configure active and standby uplinks. Set active uplink as `Uplink1` and standby uplink is `Uplink2`.
+
+- Click `OK` to complete the configuration of the port group.
+
+Repeat steps above to create port groups for other ESXi services listed above.
+
+Also configure the default port group to handle `VM traffic`.
+
+
+### Create VMkernel Adapters
+
+Setup networking TCP/IP stack for the vMotion ESXi service
+
+**Procedure**
+
+- In the vSphere Client, select esxi01 host.
+
+- Under `Manage`, select `Networking` and then select `VMkernel adapters`.
+
+- Click `Add host networking`.
+
+- On the `Select connection type` page, select `VMkernel Network Adapter` and click `Next`.
+
+- On the `Select target device` page, select the existing vSwitch,`**Odennav-DSwitch**`
+
+- On the `Port` properties, enable `**vMotion**` Traffic and select Next.
+
+- Configure network settings for the vMotion VMkernel interface, use a unique IP address for host's vMotion interface. and click `Next`. 
+  Note: it is not recommended to override the default gateway.
+
+- Review the settings and click `Finish`.
+
+
+### Associate Hosts with the vSwitch
+
+We'll connect the physical NICs, VMkernel adapters and virtual machine network adapters of the hosts to the distributed switch.
+
+**Procedure**
+
+- In the vSphere Client, navigate to `**Networking**` tab and select the distributed switch.
+
+- From the `Actions` menu, select `Add and Manage Hosts`.
+
+- On the `Select task` page, select `Add hosts`, and click `Next`.
+
+- On the `Select hosts` page, click `New hosts`, select the hosts in your data center, click `OK`, and then click `Next`.
+
+On the `Manage physical adapters` page, we'll configure physical NICs on the distributed switch.
+
+- From the `On other switches/unclaimed` list, select a physical NIC.
+
+- Click `Assign uplink`.
+
+- Select an uplink. Assign `Uplink 1` to `vmnic0` and `Uplink 2` to `vmnic1`
+
+- To assign the uplink to all the hosts in the cluster, select `**Apply this uplink assignment to the rest of the hosts**`.
+
+- Click `OK`, then `Next`
+
+On the `Manage VMkernel adapters` page, configure VMkernel adapters.
+
+- Select a VMkernel adapter and click `Assign port group`.
+
+- Select the `DPortGroup-vMotion` distributed port group.
+
+To apply the port group to all hosts in the cluster, select `**Apply this port group assignment to the rest of the hosts**`.
+
+Click `OK`and save this configuration.
+
+
+-----
+
+## vSphere Distributed Switch Setup
+
+This switch is required to handle the networking configuration for all ESXi hosts.
+
+We'll implement the following:
+- Create a vSphere Distributed Switch
+- Create Distributed Port Groups
+- Create VMkernel Adapters
+- Associate Hosts with the vSwitch.
+
+### Create a vSphere Distributed Switch
+
+**Procedure**
+
+- Navigate to a data center in the vSphere Client
+
+- Right-click the data center and select `**Distributed Switch**` > `**New Distributed Switch**`.
+Enter `Odennav-DSwitch` as name for the new distributed switch.
+
+Enter version `8.0` for the distributed switch.
+
+In `Configure Settings`, enter value of `2` as number of uplinks ports.
+
+Review the settings and Click `Finish`.
+
+Right-click the distributed switch just created and select `**Settings**` > `**Edit settings**`.
+
+On the Advanced tab, enter a value of more than `1700` as the MTU value and click `OK`.
+The MTU size must be 1700 or greater on any network that carries overlay traffic.
+
+
+### Create Distributed Port Groups
+
+We'll create port groups for each of the following ESXi services below:
+Note their VLAN IDs
+
+- vMotion (VLAN-ID=5)
+- Provisioning (VLAN-ID=6)
+- Fault Tolerance (VLAN-ID=7)
+- vSAN (VLAN-ID=8)
+- Management (VLAN-ID=9)
+- NSX Tunnel Endpoints (VLAN-ID=100)
+- NSX Edge Uplink (VLAN-ID=101)
+
+**Procedure to Create vMotion Port Group**
+
+- Navigate to a data center in the vSphere Client
+
+- Right-click the distributed switch and select `**Distributed Port Group**` > `**New Distributed Port Group**`.
+
+- Create a port group for the vMotion. Name it `DPortGroup-vMotion`.
+
+- Set `VLAN Type` as VLAN Trunking.
+
+- Accept the default VLAN trunk range `(0-4094)`. Set `VLAN ID` to `**5**`.
+
+- Click `Next`, then click `Finish`.
+
+- Right-click the distributed switch, `**Odennav-DSwitch**`, select `**Distributed Port Group**` > `**Manage Distributed Port Groups**`.
+
+- Select `Teaming and failover` and click `Next`.
+
+- Configure active and standby uplinks. Set active uplink as `Uplink1` and standby uplink is `Uplink2`.
+
+- Click `OK` to complete the configuration of the port group.
+
+Repeat steps above to create port groups for other ESXi services listed above.
+
+Also configure the default port group to handle `VM traffic`.
+
+
+### Create VMkernel Adapters
+
+Setup networking TCP/IP stack for the vMotion ESXi service
+
+**Procedure**
+
+- In the vSphere Client, select esxi01 host.
+
+- Under `Manage`, select `Networking` and then select `VMkernel adapters`.
+
+- Click `Add host networking`.
+
+- On the `Select connection type` page, select `VMkernel Network Adapter` and click `Next`.
+
+- On the `Select target device` page, select the existing vSwitch,`**Odennav-DSwitch**`
+
+- On the `Port` properties, enable `**vMotion**` Traffic and select Next.
+
+- Configure network settings for the vMotion VMkernel interface, use a unique IP address for host's vMotion interface. and click `Next`.
+  Note: it is not recommended to override the default gateway.
+
+- Review the settings and click `Finish`.
+
+
+### Associate Hosts with the vSwitch
+
+We'll connect the physical NICs, VMkernel adapters and virtual machine network adapters of the hosts to the distributed switch.
+
+**Procedure**
+
+- In the vSphere Client, navigate to `**Networking**` tab and select the distributed switch.
+
+- From the `Actions` menu, select `Add and Manage Hosts`.
+
+- On the `Select task` page, select `Add hosts`, and click `Next`.
+
+- On the `Select hosts` page, click `New hosts`, select the hosts in your data center, click `OK`, and then click `Next`.
+
+On the `Manage physical adapters` page, we'll configure physical NICs on the distributed switch.
+
+- From the `On other switches/unclaimed` list, select a physical NIC.
+
+- Click `Assign uplink`.
+
+- Select an uplink. Assign `Uplink 1` to `vmnic0` and `Uplink 2` to `vmnic1`
+
+- To assign the uplink to all the hosts in the cluster, select `**Apply this uplink assignment to the rest of the hosts**`.
+
+- Click `OK`, then `Next`
+
+On the `Manage VMkernel adapters` page, configure VMkernel adapters.
+
+- Select a VMkernel adapter and click `Assign port group`.
+
+- Select the `DPortGroup-vMotion` distributed port group.
+
+To apply the port group to all hosts in the cluster, select `**Apply this port group assignment to the rest of the hosts**`.
+
+Click `OK`and save this configuration.
+
+
+-----
+
+## NFS Storage Server Setup
+
+### Create NFS virtual machine in VMware Workstation
+
+1. Open your VMware Workstation, click on `Create a New Virtual Machine`
+
+2. Select Installer disc image file (iso): and click Browse... to find the `CentOS 8` Server iso in your directory.
+   Click Next.
+
+3. Name the virtual machine as `NFS-Server-1` and select Location you want the NFS server installed.
+   Click Next.
+
+4. Select `store virtual disk as a single file` and specify disk capacity of 200GB. Click Next.
+
+5. Click on `Customize Hardware`, then select `Memory` size of 8GB and 4 Processor cores as minimum.
+
+   Select `Virtualize Intel VT-x/EPT or AMD-V/RVI`
+
+6. Use `Bridged` or  `NAT` network connection. For `Bridged` connection, ensure DHCP is properly configured on your router.
+
+7. Select `Power on this virtual machine after creation`.
+
+   Click `Finish`.
+
+### Install CentOS in Virtual Machine
+
+   Once your virtual machine is up and running, follow the next steps to finish the CentOS installation on your VMware Workstation.
+
+1. Set correct `DATE & TIME`
+
+2. Configure preferred `LANGUAGE SUPPORT` and `KEYBOARD` layout.
+
+3. Set `INSTALLATION DESTINATION`
+
+4. Configure `NETWORK & HOSTNAME` and `ROOT PASSWORD`
+
+   Click `Begin Installation` at bottom right corner.
+
+
+### Install NFS
+
+   Update package list and upgrade all installed packages
+   ```bash
+   yum update && yum upgrade -y
+   ```
+
+   Install NFS utilities and libraries
+   ```bash
+   yum install nfs-utils libnfsidmap -y
+   ```
+
+   Enable and start these services for NFS to function properly
+   ```bash
+   systemctl enable rpcbind
+   systemctl enable nfs-server
+   systemctl start rpcbind
+   systemctl start rpc-statd
+   systemctl start rpc-statd
+   systemctl start nfs-idmapd
+   ```
+
+   Check available disk partitions
+   ```bash
+   fdisk -l
+   ```
+
+### Add Disks to CentOS Server
+
+We'll create new disk and add to server inventory.
+This disk will be used to setup NFS datastore.
+
+- Go to `*Player*` > `*Manage*` > `*Virtual Machine Settings*` at top left of VMware workstartion.
+- Click `Add...` at bottom left
+- In the popped up `Add Hardware Wizard`, select `Hard Disk` hardware type and click `Next`
+- Select `SCSI` as virtual disk type and click `Next`
+- Select `Create a new virtual disk` and click `Next`
+- Set `Maximum disk size` at 200GB and choose `store virtual disk as a single file`
+- Click `Finish`
+
+Notice new `Hard Disk(SCSI)` with size 100GB added to hardware inventory.
+
+Repeat steps above to add another `Hard Disk(SCSI)` with size 5GB.
+This disk will be used to setup Heartbeat datastore.
+
+Reboot CentOS server
+```bash
+reboot
+```
+
+### Create XFS Partitions on Linux
+
+Implement the following steps to create XFS partition on disk for NFS:
+
+1. Check available disks detected and confirm new disks
+   ```bash
+   fdisk -l
+   ```
+   Note both `/dev/sdb` and `/dev/sdc` now added to list of disks available.
+
+2. Partition second disk available
+   ```bash
+   fdisk /dev/sdb
+   ```
+
+3. System will ask for `Command` input
+   Enter `n` to add a new partition
+
+4. Type and enter `p` to select Primary partition type
+
+5. Press `Enter` to set default `partition number` as 1
+
+6. For `First sector` prompt, press `Enter` to use default value of 2048
+
+7. For `Second sector` prompt, press `Enter` again to use default value.
+
+   Note statement of `Partition 1 of type Linux and of size 100GB is set`
+
+8. Type `w` and press `Enter` to write this new partition to the disk and ensure partition table is re-read.
+
+9. Make xfs filesystem on new partition
+   ```bash
+   mkfs.xfs /dev/sdb1
+   ```
+
+
+Implement the following steps to create XFS partition on disk for Heartbeat:
+
+1. Check available disks detected and confirm new disks
+   ```bash
+   fdisk -l
+   ```
+   Note boot partition `/dev/sdb1`
+
+2. Partition second disk available
+   ```bash
+   fdisk /dev/sdc
+   ```
+
+3. System will ask for `Command` input
+   Enter `n` to add a new partition
+
+4. Type and enter `p` to select Primary partition type
+
+5. Press `Enter` to set default `partition number` as 1
+
+6. For `First sector` prompt, press `Enter` to use default value of 2048
+
+7. For `Second sector` prompt, press `Enter` again to use default value.
+
+   Note statement of `Partition 1 of type Linux and of size 100GB is set`
+
+8. Type `w` and press `Enter` to write this new partition to the disk and ensure partition table is re-read.
+
+9. Make xfs filesystem on new partition
+   ```bash
+   mkfs.xfs /dev/sdc1
+   ```
+
+### Create NFS Mount Points
+
+  Make new directories as NFS mount points
+  ```bash
+  mkdir /nfs-share-1
+  mkdir /hb-share-1
+  ```
+
+  Mount disk partitions
+  ```bash
+  mount /dev/sdb1 /nfs-share-1
+  mount /dev/sdc1 /hb-share-1
+  ```
+
+  Check disk space usage and confirm filesystems are mounted
+  ```bash
+  df -h
+  ```
+
+  **Enable Auto Mount**
+
+   Confirm the file sytem table is defined for our new filesystems to be mounted at system boot and normal operations.
+
+   Check `/etc/fstab` and confirm entries for both `/dev/sdb1` and `/dev/sdc1` filesystems.
+   If not available, add them as shown below:
+
+   Copy config file
+   ```bash
+   cp /etc/fstab /etc/fstab.bak
+   cd /etc
+   ```
+
+   Edit fstab configuration file
+   ```bash
+   vi /etc/fstab
+   ```
+
+   ```bash
+   /dev/sdb1	/nfs-share-1	xfs	defaults	0	0
+   /dev/sdc1	/hb-share-1	xfs	defaults	0	0
+   ```
+
+   **Configure Exports Configuration File**
+   Check `/etc/exports` file used by NFS server to define the directories and options that it will export to NFS clients.
+
+   Copy config file
+   ```bash
+   cp /etc/exports /etc/exports.bak
+   cd /etc
+   ```
+
+   Edit exports configuration file
+   ```bash
+   vi /etc/exports
+   ```
+
+   Add entry to exports configuration file
+   ```bash
+   /nfs-share-1 *(rw,sync,no_root_squash,insecure)
+   /hb-share-1 *(rw,sync,no_root_squash,insecure)
+   ```
+
+   Export the NFS shares
+
+   ```bash
+   exportfs -rv
+   ```
+
+   Disabling firewall(optional)
+
+   If firewall is configured to block nfs related ports.
+   Please re-open this ports. No need to disable entire firewall.
+
+
+   **Mount NFS Shares to ESXi Hosts**
+
+   We'll use vCenter server to mount this NFS shares to ESXi hosts in workload cluster named `odennav-dc-cluster.
+   This task will be implemented with terraform.
+
+
+   ```bash
+   yum update -y
+   yum install net-tools
+   ```
+
+   View IP address of NFS server
+   ```bash
+   ifconfig
+   ```
+
+   We'll add the IPv4 address of NFS servers to the terraform manifest `vmware-sddc-private-cloud/terraform-manifest/modules/datastores_nfs/datastores_nfs_main.tf`
+
+
+
+   Please note you'll have to create another NFS server to provide redundancy and fault tolerance.
+   If one NFS server goes down or experiences issues, clients can still access data from the other NFS server.
+
+   Name of directories to mount as nfs shares:
+   - /nfs-share-2
+   - /hb-share-2
+
+   For the second NFS server, use same disk sizes for 1st NFS server.
 
 -----
 
@@ -708,10 +1242,276 @@ terraform apply
 
 -----
 
+## NSX-T Setup and Configuration
+
+ NSX network virtualization programmatically creates and manages virtual networks.
+With network virtualization, the functional equivalent of a network hypervisor reproduces the 
+complete set of Layer 2 through Layer 7 networking services (for example, switching, routing, 
+access control, firewalling, QoS) in software.
+
+NSX works by implementing three separate but integrated planes: management, control, and 
+data.
+
+These planes are implemented as a set of processes, modules, and agents residing on two 
+types of nodes: NSX Manager and transport nodes.
+
+**Requirements**
+
+Note the following resources we'll need to configure NSX-T for this project:
+
+- Two datacenter clusters:
+
+  Workload cluster(3 ESXi hosts)
+  Edge cluster(1 ESXi host)
+
+- vDS(Virtual Distributed Switch) over workload cluster:
+  With five portgroups for:
+  - Management
+  - vMotion
+  - Provisioning
+  - Fault tolerance
+  - Tunnel Endpoint
+  - NSX Edge(Uplink)
+
+
+- Enable Jumbo frames by setting MTU to 1700 or larger on VSS(Virtual Standard Switch) and VDS.
+
+- Use physical multilayer switch and configure 3 VLANS:
+  
+  Mangaement VLAN 
+  Tunnel Endpoint(TEP) 
+  NSX Edge VLAN 
+
+  |  VLAN Purpose   |   VLAN Number   |  IP Interface     |
+  |-----------------|-----------------|-------------------|
+  | Management      |      50         | 192.168.50.1/24   |
+  | Tunnel Endpoint |      100        | 192.168.100.1/24  |
+  | NSX Edge        |      101        | 192.168.101.1/24  |
+
+  These VLANS should be trunked(802.1q) to the ESXi hosts in workload cluster so that they're used with virtual switches.
+
+- NSX-T Data Center needs license for proper configuration and `vSphere7 Enterprise Plus license` needed for ESXi hosts.
+
+
+### Deploy NSX-T Manager
+
+NSX-T Manager supports a cluster with three node, which merges policy manager, management, and central control services on a cluster of nodes. 
+
+Clustering is recommended for production environment and this provides high availability of the user interface and API.
+
+Download VMware ovf tool for your preferred operating system from [here](https://developer.vmware.com/web/tool/ovf/) and use it to deploy to an ESXi host.
+
+Due to resources available we'll just install one manager on esxi03 which is managed by vCenter.
+
+
+**Procedure**
+
+Run the ovftool command with appropriate command parameters.
+Installation is done on windows local machine
+
+Ceate directory on local machine for ovftool logs
+```console
+mkdir C:\ovftool-logs
+```
+
+Extract ovftool zipped package to `C:\`  and run below command in Windows command prompt.
+Note my extracted folder from zip package is `C:\VMware-ovftool-4.4.3-18663434-win.x86_64`
+
+```console
+C:\VMware-ovftool-4.4.3-18663434-win.x86_64\ovftool>ovftool \
+--name=nsx-manager-1
+--X:injectOvfEnv 
+--X:logFile=C:\ovftool-logs\ovftool.log 
+--sourceType=OVA 
+--vmFolder='' 
+--allowExtraConfig 
+--datastore=nfs-datastore-1
+--net:"" 
+--acceptAllEulas 
+--skipManifestCheck 
+--noSSLVerify 
+--diskMode=thin
+--quiet 
+--hideEula 
+--powerOn 
+--prop:nsx_ip_0=192.168.36.40  
+--prop:nsx_netmask_0=255.255.255.0 
+--prop:nsx_gateway_0=192.168.36.1
+--prop:nsx_dns1_0=192.168.36.2 
+--prop:nsx_domain_0=nsx.local 
+--prop:nsx_ntp_0=162.159.200.1 
+--prop:nsx_isSSHEnabled=True 
+--prop:"nsx_passwd_0=password" 
+--prop:"nsx_cli_passwd_0=password-cli" 
+--prop:"nsx_cli_audit_passwd_0=password-cli-audit" 
+--prop:nsx_hostname=nsx
+--prop:mgrhostname01="victor.odeghe@tretennetworks.com" 
+--prop:nsx_allowSSHRootLogin=True 
+--prop:nsx_role="NSX Manager" 
+--X:logFile=/root/ovftool/ovf-folder.log 
+--X:logLevel=trivia 
+--ipProtocol=IPv4 
+--ipAllocationPolicy="fixedPolicy" C:\NSX-T Data Center 3.2.3.1\nsx-embedded-unified-appliance-3.2.3.1.0.22104638.ova \
+'vi://Administrator@vsphere.local:Csgmtehmtrpe61395$%@192.168.36.6/odennav-datacenter/host/Install/192.168.36.5/
+
+
+The result should look something like this:
+
+```text
+Opening OVA source: nsx-embedded-unified-appliance-3.2.3.1.ova
+The manifest validates
+Source is signed and the certificate validates
+Opening VI target: vi://Administrator@vsphere.local@192.168.36.5:443/
+Deploying to VI: vi://Administrator@vsphere.local@192.168.36.5:443/
+Transfer Completed
+Powering on VM: NSX Manager
+Task Completed
+Completed successfully
+```
+
+After deployment, verify that the NSX ManagerNSX Manager UI comes up by accessing the 
+following URL, https://192.168.36.40 on your browser.
+
+
+### NSX IP Pools Setup 
+
+We'll setup IP pools to assign Tunnel Endpoints to each of our ESXi hosts that are participating in the NSX Overlay networks.
+
+Since we're using three hosts, and expect to deploy 1 edge node, we’ll need a TEP Pool(static IPv4 addresses) with at least 4 IP Addresses.
+
+**Procedure**
+
+Login to NSX Manager
+
+
+At the NSX-T Manager, go to *Networking* -> *IP Management* -> *IP Address Pools* 
+
+- Click `ADD IP ADDRESS POOL` enter the following details:
+  Name --> TEP-Pool
+  Description --> Tunnel Endpoint Pool
+
+
+- Click `Set` hyperlink under `Subnets`.
+
+On the `Set Subnets` section, assign the following:
+
+IP Ranges -----> 192.168.100.2-192.168.100.10
+CIDR ----------> 192.168.100.0/24
+Gateway IP ----> 192.168.100.1
+DNS Servers ---> 192.168.36.2
+DNS Suffix ----> odennav.local
+
+Click `ADD`
+
+### NSX Transport Zone Setup
+
+Next task is to setup transport zone where data packets are sent between nodes.
+
+The ESXi hosts that participate in NSX networks are grouped in the transport zone.
+
+We'll setup two transport zones:
+
+- Overlay Transport Zones
+
+- VLAN Transport Zones
+
+**Procedure for Overlay Transport Zones**
+
+At the NSX-T Manager, go to *System* –> *Fabric* –> *Transport Zones*
+
+Click the `+` button and assign the the following:
+
+Name ----------> Overlay-Zone
+Description ---> NSX Overlay Zone
+Switch Name ---> 
+Traffic Type --> Overlay
+
+Press `ADD`
+
+**Procedure for VLAN Transport Zones**
+
+At the NSX-T Manager, go to *System* –> *Fabric* –> *Transport Zones*
+
+Click the `+` button and assign the the following:
+
+Name ----------> VLAN-Zone
+Description ---> VLAN Transport Zone
+Switch Name ---> NSX-VLAN
+Traffic Type --> Overlay
+
+Click `ADD` to save this configuration
+
+
+**Procedure for Uplink Profiles**
+
+This helps to set uplinks for any of the transport nodes we’ll be creating.
+
+We'll use two NICs(Network Interface Cards)
+
+At the NSX-T Manager, go to *System* –> *Fabric* –> *Profiles*
+
+Click on `Uplink Profiles` then press the `+` button and assign the the following:
+
+Name -------------> Overlay-Uplink-Profile
+Transport VLAN ---> 100
+
+
+Save this configuration
+
+
+
+**Procedure for Transport Node Profile**
+
+This is used to  provide configuration for each of the ESXi nodes and specify which NICs on the nodes to be configured for the VDS switch.
+
+It also specifies the IP Addresses assigned for the TEP(Tunnel Endpoints) on this switch.
+
+We'll use two NICs(Network Interface Cards)
+
+At the NSX-T Manager, go to *System* –> *Fabric* –> *Profiles*
+
+Click `Transport Node Profiles` then press the `+` button and assign the the following:
+
+Name --------------> Transport-Node-Profile
+Description -------> Odennav Transport Node Profile
+Type --------------> VDS
+Mode --------------> Standard
+Name --------------> vcenter.odennav.local    Switch -----> vOdennav
+Transport Zone ----> Overlay-Zone
+Uplink Profile ----> Overlay-Uplink-Profile
+IP Assignment -----> Use IP Pool
+IP Pool -----------> TEP-Pool
+Uplinks -----------> vmnic1(Uplink 1)
+
+Save this configuration.
+
+
+**Procedure to Configure Transport Nodes**
+
+We apply the transport node profile to configure the transport nodes in the `odennav-dc-cluster`
+
+At the NSX-T Manager, go to *System* –> *Fabric* –> *Nodes*
+
+Click `Host Transport Nodes` then press the `Managed by` button to select the vCenter server.
+
+Select radio button to indicate the chosen workload cluster
+
+Then click on `CONFIGURE NSX` and assign the following:
+
+Transport Node Profile ---> Transport-Node-Profile
+
+
+Click `APPLY` to configure the ESXi hosts.
+
+
+Now we've successfully configured our chosen transport nodes and uplinks on vDS with the profiles created.
+
+
+-----
+
 ### Next Steps
 
-NSX-T Setup and Configuration
-
+NSX-T Edge Nodes
 
 -----
 
