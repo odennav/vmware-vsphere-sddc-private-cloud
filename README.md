@@ -225,7 +225,8 @@ Our system must meet specific software and hardware requirements.
 1. Download the vCenter Installer from [Customer Connect account](https://my.vmware.com/web/vmware/)
 
 2. Hardware requirements of ESXi Host:
-   This depends on the hardware specifications of host ESXi02.
+   
+   This depends on the hardware specifications of host esxi02.
    - We'll use `Tiny Environment`(for up to 10 hosts or 100 virtual machines)
    - 18GB Memory (14GB minimum)
    - Default storage size of 579GB minimum
