@@ -599,140 +599,6 @@ Click `OK`and save this configuration.
 
 -----
 
-## vSphere Distributed Switch Setup
-
-This switch is required to handle the networking configuration for all ESXi hosts.
-
-We'll implement the following:
-- Create a vSphere Distributed Switch
-- Create Distributed Port Groups
-- Create VMkernel Adapters
-- Associate Hosts with the vSwitch.
-
-### Create a vSphere Distributed Switch
-
-**Procedure**
-
-- Navigate to a data center in the vSphere Client
-
-- Right-click the data center and select `**Distributed Switch**` > `**New Distributed Switch**`.
-Enter `Odennav-DSwitch` as name for the new distributed switch.
-
-Enter version `8.0` for the distributed switch.
-
-In `Configure Settings`, enter value of `2` as number of uplinks ports.
-
-Review the settings and Click `Finish`.
-
-Right-click the distributed switch just created and select `**Settings**` > `**Edit settings**`.
-
-On the Advanced tab, enter a value of more than `1700` as the MTU value and click `OK`.
-The MTU size must be 1700 or greater on any network that carries overlay traffic.
-
-
-### Create Distributed Port Groups
-
-We'll create port groups for each of the following ESXi services below:
-Note their VLAN IDs
-
-- vMotion (VLAN-ID=5)
-- Provisioning (VLAN-ID=6)
-- Fault Tolerance (VLAN-ID=7)
-- vSAN (VLAN-ID=8)
-- Management (VLAN-ID=9)
-- NSX Tunnel Endpoints (VLAN-ID=100)
-- NSX Edge Uplink (VLAN-ID=101)
-
-**Procedure to Create vMotion Port Group**
-
-- Navigate to a data center in the vSphere Client
-
-- Right-click the distributed switch and select `**Distributed Port Group**` > `**New Distributed Port Group**`.
-
-- Create a port group for the vMotion. Name it `DPortGroup-vMotion`.
-
-- Set `VLAN Type` as VLAN Trunking.
-
-- Accept the default VLAN trunk range `(0-4094)`. Set `VLAN ID` to `**5**`.
-
-- Click `Next`, then click `Finish`.
-
-- Right-click the distributed switch, `**Odennav-DSwitch**`, select `**Distributed Port Group**` > `**Manage Distributed Port Groups**`.
-
-- Select `Teaming and failover` and click `Next`.
-
-- Configure active and standby uplinks. Set active uplink as `Uplink1` and standby uplink is `Uplink2`.
-
-- Click `OK` to complete the configuration of the port group.
-
-Repeat steps above to create port groups for other ESXi services listed above.
-
-Also configure the default port group to handle `VM traffic`.
-
-
-### Create VMkernel Adapters
-
-Setup networking TCP/IP stack for the vMotion ESXi service
-
-**Procedure**
-
-- In the vSphere Client, select esxi01 host.
-
-- Under `Manage`, select `Networking` and then select `VMkernel adapters`.
-
-- Click `Add host networking`.
-
-- On the `Select connection type` page, select `VMkernel Network Adapter` and click `Next`.
-
-- On the `Select target device` page, select the existing vSwitch,`**Odennav-DSwitch**`
-
-- On the `Port` properties, enable `**vMotion**` Traffic and select Next.
-
-- Configure network settings for the vMotion VMkernel interface, use a unique IP address for host's vMotion interface. and click `Next`.
-  Note: it is not recommended to override the default gateway.
-
-- Review the settings and click `Finish`.
-
-
-### Associate Hosts with the vSwitch
-
-We'll connect the physical NICs, VMkernel adapters and virtual machine network adapters of the hosts to the distributed switch.
-
-**Procedure**
-
-- In the vSphere Client, navigate to `**Networking**` tab and select the distributed switch.
-
-- From the `Actions` menu, select `Add and Manage Hosts`.
-
-- On the `Select task` page, select `Add hosts`, and click `Next`.
-
-- On the `Select hosts` page, click `New hosts`, select the hosts in your data center, click `OK`, and then click `Next`.
-
-On the `Manage physical adapters` page, we'll configure physical NICs on the distributed switch.
-
-- From the `On other switches/unclaimed` list, select a physical NIC.
-
-- Click `Assign uplink`.
-
-- Select an uplink. Assign `Uplink 1` to `vmnic0` and `Uplink 2` to `vmnic1`
-
-- To assign the uplink to all the hosts in the cluster, select `**Apply this uplink assignment to the rest of the hosts**`.
-
-- Click `OK`, then `Next`
-
-On the `Manage VMkernel adapters` page, configure VMkernel adapters.
-
-- Select a VMkernel adapter and click `Assign port group`.
-
-- Select the `DPortGroup-vMotion` distributed port group.
-
-To apply the port group to all hosts in the cluster, select `**Apply this port group assignment to the rest of the hosts**`.
-
-Click `OK`and save this configuration.
-
-
------
-
 ## NFS Storage Server Setup
 
 ### Create NFS virtual machine in VMware Workstation
@@ -1384,10 +1250,12 @@ Since we're using three hosts, and expect to deploy 1 edge node, we’ll need a 
 Login to NSX Manager
 
 
-At the NSX-T Manager, go to *Networking* -> *IP Management* -> *IP Address Pools* 
+At the NSX-T Manager, go to **`Networking`** -> **`IP Management`** -> **`IP Address Pools`** 
 
 - Click `ADD IP ADDRESS POOL` enter the following details:
+
   Name --> TEP-Pool
+  
   Description --> Tunnel Endpoint Pool
 
 
@@ -1396,9 +1264,13 @@ At the NSX-T Manager, go to *Networking* -> *IP Management* -> *IP Address Pools
 On the `Set Subnets` section, assign the following:
 
 IP Ranges -----> 192.168.100.2-192.168.100.10
+
 CIDR ----------> 192.168.100.0/24
+
 Gateway IP ----> 192.168.100.1
+
 DNS Servers ---> 192.168.36.2
+
 DNS Suffix ----> odennav.local
 
 Click `ADD`
@@ -1417,26 +1289,32 @@ We'll setup two transport zones:
 
 **Procedure for Overlay Transport Zones**
 
-At the NSX-T Manager, go to *System* –> *Fabric* –> *Transport Zones*
+At the NSX-T Manager, go to **`System`** –> **`Fabric`** –> **`Transport Zones`**
 
 Click the `+` button and assign the the following:
 
 Name ----------> Overlay-Zone
+
 Description ---> NSX Overlay Zone
+
 Switch Name ---> 
+
 Traffic Type --> Overlay
 
 Press `ADD`
 
 **Procedure for VLAN Transport Zones**
 
-At the NSX-T Manager, go to *System* –> *Fabric* –> *Transport Zones*
+At the NSX-T Manager, go to **`System`** –> **`Fabric`** –> **`Transport Zones`**
 
 Click the `+` button and assign the the following:
 
 Name ----------> VLAN-Zone
+
 Description ---> VLAN Transport Zone
+
 Switch Name ---> NSX-VLAN
+
 Traffic Type --> Overlay
 
 Click `ADD` to save this configuration
@@ -1448,11 +1326,12 @@ This helps to set uplinks for any of the transport nodes we’ll be creating.
 
 We'll use two NICs(Network Interface Cards)
 
-At the NSX-T Manager, go to *System* –> *Fabric* –> *Profiles*
+At the NSX-T Manager, go to **`System`** –> **`Fabric`** –> **`Profiles`**
 
 Click on `Uplink Profiles` then press the `+` button and assign the the following:
 
 Name -------------> Overlay-Uplink-Profile
+
 Transport VLAN ---> 100
 
 
@@ -1468,19 +1347,28 @@ It also specifies the IP Addresses assigned for the TEP(Tunnel Endpoints) on thi
 
 We'll use two NICs(Network Interface Cards)
 
-At the NSX-T Manager, go to *System* –> *Fabric* –> *Profiles*
+At the NSX-T Manager, go to **`System`** –> **`Fabric`** –> **`Profiles`**
 
 Click `Transport Node Profiles` then press the `+` button and assign the the following:
 
 Name --------------> Transport-Node-Profile
+
 Description -------> Odennav Transport Node Profile
+
 Type --------------> VDS
+
 Mode --------------> Standard
+
 Name --------------> vcenter.odennav.local    Switch -----> vOdennav
+
 Transport Zone ----> Overlay-Zone
+
 Uplink Profile ----> Overlay-Uplink-Profile
+
 IP Assignment -----> Use IP Pool
+
 IP Pool -----------> TEP-Pool
+
 Uplinks -----------> vmnic1(Uplink 1)
 
 Save this configuration.
@@ -1490,7 +1378,7 @@ Save this configuration.
 
 We apply the transport node profile to configure the transport nodes in the `odennav-dc-cluster`
 
-At the NSX-T Manager, go to *System* –> *Fabric* –> *Nodes*
+At the NSX-T Manager, go to **`System`** –> **`Fabric`** –> **`Nodes`**
 
 Click `Host Transport Nodes` then press the `Managed by` button to select the vCenter server.
 
