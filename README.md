@@ -1270,7 +1270,7 @@ C:\VMware-ovftool-4.4.3-18663434-win.x86_64\ovftool>ovftool
 --prop:nsx_netmask_0=255.255.255.0 
 --prop:nsx_gateway_0=192.168.10.1
 --prop:nsx_dns1_0=192.168.36.2 
---prop:nsx_domain_0=nsx.local 
+--prop:nsx_domain_0=odennav.local 
 --prop:nsx_ntp_0=162.159.200.1 
 --prop:nsx_isSSHEnabled=True 
 --prop:"nsx_passwd_0=password" 
