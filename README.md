@@ -1,4 +1,4 @@
-# VMware SDDC Cloud Lab
+# VMware vSphere SDDC Private Cloud Lab
 
 SDDC (Software Defined Data Center) is an architecture that allows for any application's infrastructure to be fully automated and always available.
 
