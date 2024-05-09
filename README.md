@@ -1625,7 +1625,7 @@ Repeat steps 2-3 and create WEB1.1 (subnet: 192.168.2.0/24, connectivity: T1-gat
 Verify that LB1.1 and WEB1.1 are created under the VDS(Odennav-DSwitch) in Vcenter.
 
 
-### Create NSX Vlan Segment
+### Create NSX VLAN Segment
 
 We'll create a segment for our Tier-0 gateway to use and connect to our physical network.
 
