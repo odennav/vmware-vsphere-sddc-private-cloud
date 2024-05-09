@@ -680,7 +680,7 @@ This disk will be used to setup NFS datastore.
 - In the popped up `Add Hardware Wizard`, select `Hard Disk` hardware type and click `Next`
 - Select `SCSI` as virtual disk type and click `Next`
 - Select `Create a new virtual disk` and click `Next`
-- Set `Maximum disk size` at 200GB and choose `store virtual disk as a single file`
+- Set `Maximum disk size` at 100GB and choose `store virtual disk as a single file`
 - Click `Finish`
 
 Notice new `Hard Disk(SCSI)` with size 100GB added to hardware inventory.
