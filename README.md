@@ -1181,9 +1181,9 @@ VLAN 50 -----------------------> For traffic between the tier-0 gateway and phys
 
 DPortGroup-MGMT -----------> vCenter PG-mgmt backed by VLAN 10 	                                         
 
-Management subnet ---------> 192.168.10.0/24, default gateway: 192.168.10.1, subnet mask: 255.255.255.0       
+Management subnet ---------> 192.168.10.0/24, Default gateway: 192.168.10.1, Subnet mask: 255.255.255.0       
 
-Tunnel Endpoint(TEP) --------> subnet 192.168.20.0/24, default gateway: 192.168.20.1, subnet-mask:255.255.255.0 
+Tunnel Endpoint(TEP) --------> Subnet 192.168.20.0/24, Default gateway: 192.168.20.1, Subnet-mask:255.255.255.0 
  	
 vCenter IP address ------------> 192.168.10.10 (VLAN 10)                                           	
 
@@ -1195,9 +1195,9 @@ ESXi-3 IP address -------------> 192.168.10.13 (VLAN 10), 192.168.20.13 (VLAN 20
 
 ESXi-4 IP address -------------> 192.168.10.14 (VLAN 10)
 
-NSX-mgr-1 IP address ----------> 192.168.10.15 (VLAN 10) 
+NSX-mgr-1 IP address -------> 192.168.10.15 (VLAN 10) 
 
-NSX-mgr-2 IP address ----------> 192.168.10.16 (VLAN 10) 
+NSX-mgr-2 IP address -------> 192.168.10.16 (VLAN 10) 
 
 Edge-1 IP address -------------> 192.168.10.17 (VLAN 10), 192.168.20.17 (VLAN 20)	
 
