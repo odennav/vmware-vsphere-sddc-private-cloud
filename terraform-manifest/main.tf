@@ -43,6 +43,15 @@ output "esxi03" {
   value = module.esxi03.esxi03_id
 }
 
+module "esxi04" {
+  source = "./modules/esxi04"
+}
+
+output "esxi04" {
+  description = "third host"  
+  value = module.esxi04.esxi04_id
+}
+
 module "datacenter_cluster" {
   source = "./modules/datacenter_cluster"
 }
@@ -50,6 +59,15 @@ module "datacenter_cluster" {
 output "datacenter_cluster" {
   description = "datacenter cluster"  
   value = module.datacenter_cluster.datacenter_cluster_id
+}
+
+module "datacenter_edge_cluster" {
+  source = "./modules/datacenter_edge_cluster"
+}
+
+output "datacenter_edge_cluster" {
+  description = "datacenter edge cluster"  
+  value = module.datacenter_cluster.datacenter_edge_cluster_id
 }
 
 module "tags" {
