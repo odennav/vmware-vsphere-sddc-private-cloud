@@ -1181,9 +1181,9 @@ VLAN 50 -----------------------> For traffic between the tier-0 gateway and phys
 
 DPortGroup-MGMT -----------> vCenter PG-mgmt backed by VLAN 10 	                                         
 
-Management subnet ---------> 192.168.10.0/24, Default gateway: 192.168.10.1, Subnet mask: 255.255.255.0       
+Management subnet ----------> 192.168.10.0/24, Default gateway: 192.168.10.1, Subnet mask: 255.255.255.0       
 
-Tunnel Endpoint(TEP) --------> Subnet 192.168.20.0/24, Default gateway: 192.168.20.1, Subnet-mask:255.255.255.0 
+Tunnel Endpoint(TEP) ---------> Subnet 192.168.20.0/24, Default gateway: 192.168.20.1, Subnet-mask:255.255.255.0 
  	
 vCenter IP address ------------> 192.168.10.10 (VLAN 10)                                           	
 
@@ -1209,9 +1209,11 @@ Tier-0 gateway's external-interface IP address on Edge-1 -------> 192.168.50.11 
                                                                                                                                                                        	
 Tier-0 gateway's external interface IP address on Edge-2 -------> 192.168.50.12 (VLAN 50)
 
-Tier-0 gateway's virtual IP ---------------------------------------> 192.168.50.13 (VLAN 50)                                                         
+Tier-0 gateway's virtual IP -----------------------------------------> 192.168.50.13 (VLAN 50)                                                         
 
-LB1.1 subnet ------------------------------------------------------> 192.168.1.0/24                                                                    
+LB1.1 subnet -------------------------------------------------------> 192.168.1.0/24
+
+
 LB-VM-1 IP address -----------------------------------------------> 192.168.1.2                                                                   
 
 WEB1.1 subnet ----------------------------------------------------> 192.168.2.0/24                                                              
