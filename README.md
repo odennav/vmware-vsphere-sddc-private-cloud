@@ -1179,7 +1179,7 @@ VLAN 20 -----------------------> For NSX TEP traffic
 
 VLAN 50 -----------------------> For traffic between the tier-0 gateway and physical router(NSX edge traffic      
 
-DPortGroup-MGMT ---------------> vCenter PG-mgmt backed by VLAN 10 	                                         
+DPortGroup-MGMT ----------> vCenter PG-mgmt backed by VLAN 10 	                                         
 
 Management subnet -------------> 192.168.10.0/24, default gateway: 192.168.10.1, subnet mask: 255.255.255.0       
 
@@ -1249,7 +1249,7 @@ Extract ovftool zipped package to `C:\`  and run below command in Windows comman
 Note my extracted folder from zip package is `C:\VMware-ovftool-4.4.3-18663434-win.x86_64`
 
 ```console
-C:\VMware-ovftool-4.4.3-18663434-win.x86_64\ovftool>ovftool \
+C:\VMware-ovftool-4.4.3-18663434-win.x86_64\ovftool>ovftool 
 --name=nsx-manager-1
 --X:injectOvfEnv 
 --X:logFile=C:\ovftool-logs\ovftool.log 
