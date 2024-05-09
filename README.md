@@ -1487,7 +1487,7 @@ Assign the following:
 
 Name -------------------> Edge-1
 
-Host name --------------> edge1.nsx.local
+Host name --------------> edge1.odennav.local
 
 Form Factor ------------> Select the appropriate edge node size.
 
@@ -1507,11 +1507,11 @@ Audit Password	--------> ********
 
 Compute Manager	--------> vcenter
 
-Cluster	----------------> odennav-dc-cluster
+Cluster	----------------> odennav-edge-cluster
 
-Host -------------------> 192.168.10.11 
+Host -------------------> 192.168.10.14
 
-Datastore --------------> nfs-datastore-1
+Datastore --------------> nfs-datastore-2
 
 IP Assignment ----------> Static
 
