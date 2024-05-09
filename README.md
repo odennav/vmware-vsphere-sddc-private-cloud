@@ -1179,11 +1179,11 @@ VLAN 20 -----------------------> For NSX TEP traffic
 
 VLAN 50 -----------------------> For traffic between the tier-0 gateway and physical router(NSX edge traffic      
 
-DPortGroup-MGMT ----------> vCenter PG-mgmt backed by VLAN 10 	                                         
+DPortGroup-MGMT -----------> vCenter PG-mgmt backed by VLAN 10 	                                         
 
-Management subnet -------------> 192.168.10.0/24, default gateway: 192.168.10.1, subnet mask: 255.255.255.0       
+Management subnet ---------> 192.168.10.0/24, default gateway: 192.168.10.1, subnet mask: 255.255.255.0       
 
-Tunnel Endpoint(TEP) ----------> subnet 192.168.20.0/24, default gateway: 192.168.20.1, subnet-mask:255.255.255.0 
+Tunnel Endpoint(TEP) --------> subnet 192.168.20.0/24, default gateway: 192.168.20.1, subnet-mask:255.255.255.0 
  	
 vCenter IP address ------------> 192.168.10.10 (VLAN 10)                                           	
 
