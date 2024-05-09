@@ -1301,8 +1301,8 @@ Task Completed
 Completed successfully
 ```
 
-After deployment, verify that the NSX ManagerNSX Manager UI comes up by accessing the 
-following URL, https://192.168.10.15 on your browser.
+After deployment, verify that the NSX Manager UI comes up by accessing the 
+following URL, `192.168.10.15` on your browser.
 
 
 ### NSX IP-Pools Setup 
