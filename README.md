@@ -87,7 +87,7 @@ To install or upgrade ESXi, your system must meet specific hardware and software
 
 ### ESXi Hardware Requirements
 
-To install or upgrade ESXi 7.0, your hardware and system resources must meet the following
+To install or upgrade ESXi 7/8, your hardware and system resources must meet the following
 requirements:
 
 - Requires a host with at least two CPU cores.
@@ -101,11 +101,11 @@ virtual machines in typical production environments.
 
 - For 64-bit virtual machines, support for hardware virtualization (Intel VT-x or AMD RVI) must be enabled on x64 CPUs.
 
-- Recommended size for VMware ESXi 7.0 is 142GB minimum. VMFS datastore is created automatically to store virtual machine data.
+- Recommended size for VMware ESXi 7/8 is 142GB minimum. VMFS datastore is created automatically to store virtual machine data.
   Local disk of 128 GB or larger for optimal support of ESX-OSData. 
   The disk contains the boot partition, ESX-OSData volume and a VMFS datastore.
 
-- vSphere 7.0 supports booting ESXi hosts from the Unified Extensible Firmware Interface (UEFI). With UEFI, we can boot systems from hard drives, CD-ROM drives, or USB media.
+- vSphere 7/8 supports booting ESXi hosts from the Unified Extensible Firmware Interface (UEFI). With UEFI, we can boot systems from hard drives, CD-ROM drives, or USB media.
  
 
 For a complete list of supported processors and server platforms, see the VMware compatibility guide at http://www.vmware.com/resources/compatibility.
@@ -204,7 +204,7 @@ Please note the hardware specifications for esxi02 will be different and bigger 
 
 ## Deploy vCenter Server Appliance
 
-You can deploy the vCenter Server appliance on an ESXi host 7.0 or later, or on a vCenter Server instance 7.0. 
+You can deploy the vCenter Server appliance on an ESXi host 7/8, or on a vCenter Server instance 7/8. 
 
 When you use Fully Qualified Domain Names, verify that the client machine from which you are deploying the appliance and the network on which you are deploying the appliance use the same DNS server.
 
@@ -1214,9 +1214,9 @@ C:\VMware-ovftool-4.4.3-18663434-win.x86_64\ovftool>ovftool \
 --quiet 
 --hideEula 
 --powerOn 
---prop:nsx_ip_0=192.168.36.40  
+--prop:nsx_ip_0=192.168.10.15  
 --prop:nsx_netmask_0=255.255.255.0 
---prop:nsx_gateway_0=192.168.36.1
+--prop:nsx_gateway_0=192.168.10.1
 --prop:nsx_dns1_0=192.168.36.2 
 --prop:nsx_domain_0=nsx.local 
 --prop:nsx_ntp_0=162.159.200.1 
@@ -1231,18 +1231,18 @@ C:\VMware-ovftool-4.4.3-18663434-win.x86_64\ovftool>ovftool \
 --X:logFile=/root/ovftool/ovf-folder.log 
 --X:logLevel=trivia 
 --ipProtocol=IPv4 
---ipAllocationPolicy="fixedPolicy" C:\NSX-T Data Center 3.2.3.1\nsx-embedded-unified-appliance-3.2.3.1.0.22104638.ova \
-'vi://Administrator@vsphere.local:<vcenter-password>@192.168.36.6/odennav-datacenter/host/Install/192.168.36.5/
+--ipAllocationPolicy="fixedPolicy" C:\NSX-T Data Center 4.1\nsx-embedded-unified-appliance-4.1.ova \
+'vi://Administrator@vsphere.local:<vcenter-password>@192.168.10.10/odennav-datacenter/host/Install/192.168.10.13/
 ```
 
 The result should look something like this:
 
 ```text
-Opening OVA source: nsx-embedded-unified-appliance-3.2.3.1.ova
+Opening OVA source: nsx-embedded-unified-appliance-4.1.ova
 The manifest validates
 Source is signed and the certificate validates
-Opening VI target: vi://Administrator@vsphere.local@192.168.36.5:443/
-Deploying to VI: vi://Administrator@vsphere.local@192.168.36.5:443/
+Opening VI target: vi://Administrator@vsphere.local@192.168.10.13:443/
+Deploying to VI: vi://Administrator@vsphere.local@192.168.10.13:443/
 Transfer Completed
 Powering on VM: NSX Manager
 Task Completed
@@ -1250,7 +1250,7 @@ Completed successfully
 ```
 
 After deployment, verify that the NSX ManagerNSX Manager UI comes up by accessing the 
-following URL, https://192.168.36.40 on your browser.
+following URL, https://192.168.10.15 on your browser.
 
 
 ### NSX IP-Pools Setup 
@@ -1277,11 +1277,11 @@ At the NSX-T Manager, go to **`Networking`** -> **`IP Management`** -> **`IP Add
 
 On the `Set Subnets` section, assign the following:
 
-IP Ranges -----> 192.168.100.2-192.168.100.10
+IP Ranges -----> 192.168.20.2-192.168.20.30
 
-CIDR ----------> 192.168.100.0/24
+CIDR ----------> 192.168.20.0/24
 
-Gateway IP ----> 192.168.100.1
+Gateway IP ----> 192.168.20.1
 
 DNS Servers ---> 192.168.36.2
 
@@ -1346,7 +1346,7 @@ Click on `Uplink Profiles` then press the `+` button and assign the the followin
 
 Name -------------> Overlay-Uplink-Profile
 
-Transport VLAN ---> 100
+Transport VLAN ---> 20
 
 
 Save this configuration
