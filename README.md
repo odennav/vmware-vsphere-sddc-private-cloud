@@ -508,9 +508,9 @@ Note their VLAN IDs
 - Provisioning (VLAN-ID=6)
 - Fault Tolerance (VLAN-ID=7)
 - vSAN (VLAN-ID=8)
-- Management (VLAN-ID=9)
-- NSX Tunnel Endpoints (VLAN-ID=100)
-- NSX Edge Uplink (VLAN-ID=101)
+- Management (VLAN-ID=10)
+- NSX Tunnel Endpoints (VLAN-ID=20)
+- NSX Edge Uplink (VLAN-ID=50)
 
 **Procedure to Create vMotion Port Group**
 
@@ -1162,15 +1162,78 @@ Note the following resources we'll need to configure NSX-T for this project:
   Tunnel Endpoint(TEP) 
   NSX Edge VLAN 
 
-  |  VLAN Purpose   |   VLAN Number   |  IP Interface     |
-  |-----------------|-----------------|-------------------|
-  | Management      |      50         | 192.168.50.1/24   |
-  | Tunnel Endpoint |      100        | 192.168.100.1/24  |
-  | NSX Edge        |      101        | 192.168.101.1/24  |
-
   These VLANS should be trunked(802.1q) to the ESXi hosts in workload cluster so that they're used with virtual switches.
 
 - NSX-T Data Center needs license for proper configuration and `vSphere7 Enterprise Plus license` needed for ESXi hosts.
+
+
+### NSX Networking Information
+
+This networking information is required when installing NSX.
+
+The subnet mask is /24 for all the IP addresses below
+ ____________________________________________________________________________________________________________
+|                      |                                                                                     |
+|______SETTING_________|_____________________________________NOTES___________________________________________|
+|                      |                                                                                     |
+|  VLAN 10             |   Management traffic                                                                | 
+|                      |                                                                                     |
+|  VLAN 20	           |   For NSX TEP traffic	                                                             |
+|                      |                                                                                     |
+|  VLAN 50	           |   For traffic between the tier-0 gateway and physical router(NSX edge traffic       |
+|                      |                                                                                     |
+|  DPortGroup-MGMT     |   vCenter PG-mgmt backed by VLAN 10 	                                             |
+|                      |                                                                                     |
+|  Management subnet   |   192.168.10.0/24, default gateway: 192.168.10.1, subnet mask: 255.255.255.0        |
+|       	           |                                                                                     |
+|                      |                                                                                     |
+|  Tunnel Endpoint(TEP)|   subnet 192.168.20.0/24, default gateway: 192.168.20.1, subnet-mask:255.255.255.0  |
+|                      |                                                                                     |  	
+|  vCenter IP address  |   192.168.10.10 (VLAN 10)                                                           |	
+|                      |                                                                                     |
+|  ESXi-1 IP address   |   192.168.10.11 (VLAN 10), 192.168.20.11 (VLAN 20)                                  |
+|	                   |                                                                                     |
+|  ESXi-2 IP address   |   192.168.10.12 (VLAN 10), 192.168.20.12 (VLAN 20)                                  |
+|	                   |                                                                                     |
+|  ESXi-3 IP address   |   192.168.10.13 (VLAN 10), 192.168.20.13 (VLAN 20)                                  |
+|                      |                                                                                     |
+|  ESXi-4 IP address   |   192.168.10.14 (VLAN 10)                                                           |
+|	                   |                                                                                     |
+|  NSX-mgr-1 IP address|   192.168.10.15 (VLAN 10)                                                           |	
+|                      |                                                                                     |
+|  NSX-mgr-2 IP address|   192.168.10.16 (VLAN 10)                                                           |	
+|                      |                                                                                     |
+|  Edge-1 IP address   |   192.168.10.17 (VLAN 10), 192.168.20.17 (VLAN 20)                                  |	
+|                      |                                                                                     |
+|  Edge-2 IP address   |   192.168.10.18 (VLAN 10), 192.168.20.18 (VLAN 20)                                  |	
+|                      |                                                                                     |
+|  Physical router's   |   192.168.50.1 (VLAN 50)                                                            |
+|  downlink IP address |	                                                                                 |                        	
+|                      |                                                                                     |
+|  Tier-0 gateway's    |   192.168.50.11 (VLAN 50)                                                           |	
+|  external-interface  |                                                                                     |
+|  IP address on Edge-1|                                                                                     |	
+|                      |                                                                                     |
+|  Tier-0 gateway's    |   192.168.50.12 (VLAN 50)                                                           |
+|  external interface  |                                                                                     |
+|  IP address on Edge-2|                                                                                     |		
+|                      |                                                                                     |
+|  Tier-0 gateway's    |   192.168.50.13 (VLAN 50)                                                           |	
+|  virtual IP (VIP)    |                                                                                     |	
+|                      |                                                                                     |
+|  LB1.1 subnet	       |   192.168.1.0/24                                                                    |
+|                      |                                                                                     |
+|  LB-VM-1 IP address  |   192.168.1.2                                                                       |
+|                      |                                                                                     | 
+|  WEB1.1 subnet       |   192.168.2.0/24                                                                    |	
+|                      |                                                                                     |
+|  WEB-VM-1 IP address |   192.168.2.2                                                                       |	
+|                      |                                                                                     |
+|  WEB-VM-2 IP address |   192.168.2.3                                                                       |	
+|                      |                                                                                     |
+|  WEB-VM-3 IP address |   192.168.2.4                                                                       |
+|______________________|_____________________________________________________________________________________|
+
 
 
 ### Deploy NSX-T Manager
@@ -1409,11 +1472,257 @@ Click `APPLY` to configure the ESXi hosts.
 Now we've successfully configured our chosen transport nodes and uplinks on vDS with the profiles created.
 
 
+### Deploy NSX Edge Nodes
+
+NSX-T Edge nodes are used for security and gateway services that can’t be run on the distributed routers in use by NSX-T. 
+North/South routing and load balancing services are implemented by edge nodes.
+
+Edge node is deployed to Edge Cluster named `odennav-edge-cluster`.
+This approach is best for production setup because these nodes will become a network hotspot.
+
+The Edge VM has a virtual switch inside it, and we’ll connect the edge vm uplinks to the Distributed virtual switch uplinks.
+
+Edge VM will have three or more interfaces:
+
+- Management
+- Overlay
+- VLAN traffic to the physical network.
+
+**Procedure**
+
+- In NSX Manager, go to **`System`** > **`Fabric`** > **`Nodes`** > **`Edge Transport Nodes`**.
+
+- Click `Add Edge Node`.
+
+Assign the following:
+
+Name -------------------> Edge-1
+Host name --------------> edge1.nsx.local
+Form Factor ------------> Select the appropriate edge node size.
+CLI User Name ----------> admin
+CLI Password -----------> ***********	
+Allow SSH Login	--------> Select option based on your datacenter policy.
+System Root Password----> **************	
+Allow Root SSH Login ---> Select option based on your datacenter policy.
+Audit User Name	--------> audit 
+Audit Password	--------> ********
+Compute Manager	--------> vcenter
+Cluster	----------------> odennav-dc-cluster
+Host -------------------> 192.168.10.11 
+Datastore --------------> nfs-datastore-1
+IP Assignment ----------> Static
+Management IP ----------> 192.168.10.17
+Default Gateway --------> 192.168.10.1
+Management Interface ---> DPortGroup-MGMT
+DNS Servers ------------> 192.168.36.2
+NTP Servers ------------> pool.ntp.org
+Edge Switch name -------> nsx-overlay, nsx-vlan
+Transport Zone ---------> nsx-overlay-transportzone, nsx-vlan-transport-zone
+Uplink Profile ---------> Overlay-Uplink-Profile
+Teaming Policy(Uplinks)-> DPortGroup-TEP(uplink-1), DPortGroup-EDGE(uplink-1)
+IP Assignment ----------> Use Static IP List
+Static IP List ---------> 192.168.20.17
+Gateway ----------------> 192.168.20.1
+Subnet Mask ------------> 255.255.255.0
+
+Wait until the Configuration State column displays `Success`.
+
+You can click the Refresh button to refresh the window.
+
+Repeat steps 4-6 to deploy `Edge-2` on host `192.168.10.12` with management IP `192.168.10.18` and static IP `192.168.20.18`.
+
+
+### Create an Edge Cluster
+
+**Procedure**
+
+VMware recommend deployment of edge nodes in pairs and pooled together to form an edge cluster.
+
+- In NSX Manager, go to **`System`** > **`Fabric`** > **`Nodes`** > **`Edge Clusters`**.
+
+- Click `Add Edge Cluster`.
+
+Assign the following:
+
+Name ----------------> Edge-cluster-1
+  
+Description ---------> Odennav Edge Cluster
+
+
+- Move `Edge-1` and `Edge-2` from the `Available` window to the `Selected` window.
+
+- Save this configuration.
+
+Next, we create overlay networks for our VMs.
+
 -----
+
+### Create Tier-1 Gateways
+
+We'll setup two tier-1 gateways/routers for nsx overlay segments
+
+In NSX Manager, go to **`Networking`** > **`Tier-1 Gateways`**.
+
+Click **`Add Tier-1 Gateway`**.
+
+Assign the following:
+
+Tier-1 Gateway Name --------> T1-gateway-1
+
+Edge Cluster ---------------> Edge-cluster-1
+
+Linked Tier-0 Gateway ------> T0-gateway-1
+
+
+Under **`Route Advertisement`**, enable the following:
+ 
+`All Connected Segments & Service Ports`
+`All Static Routes`
+`All IPSec Local Endpoints`
+
+Save the changes.
+
+Repeat steps 2-5 and create T1-gateway-2. Specify the same edge cluster.
+
+
+### Create NSX Overlay Segments for VMs
+
+We'll create three nsx overlay segments for VMs
+
+In NSX Manager, go to **`Networking`** > **`Segments`**.
+
+Click `Add Segment`.
+
+Assign the following:
+
+Segment Name --------> LB1.1
+
+Connectivity --------> T1-gateway-1
+
+Transport Zone ------> Overlay-Zone
+
+Subnet --------------> 192.168.1.0/24
+
+
+Repeat steps 2-3 and create WEB1.1 (subnet: 192.168.2.0/24, connectivity: T1-gateway-2) 
+
+Verify that LB1.1 and WEB1.1 are created under the VDS(Odennav-DSwitch) in Vcenter.
+
+
+### Create NSX Vlan Segment
+
+We'll create a segment for our Tier-0 gateway to use and connect to our physical network.
+
+In NSX Manager, go to **`Networking`** > **`Segments`**.
+
+Click `Add Segment`.
+
+Assign the following:
+
+Segment Name --------> Uplink-Segment
+
+Connectivity --------> T0-gateway-1
+
+Transport Zone ------> VLAN-Zone
+
+Subnet --------------> 192.168.50.2/24
+
+VLAN ----------------> 50
+
+-----
+
+### Create a Tier-0 Gateway
+
+This gateway connects directly to our physical VLAN and provides north/south routing into the NSX overlay networks.
+
+With the Tier-0 Gateway we can connect our new NSX backed overlay segments to the physical network through the NSX-T Edge cluster.
+
+**Procedure**
+
+- In NSX Manager, go to **`Networking`** > **`Tier-0 Gateways`**.
+
+- Click `Add Tier-0 Gateway`.
+
+- Enter a name for the gateway, for example, `T0-gateway-1`.
+
+- Select the HA (high availability) mode `Active Standby`.
+
+- Select the Edge cluster `Edge-Cluster-1`.
+
+- Click `Save` and continue configuring this gateway.
+
+- Click `Interfaces` and click `Set`.
+
+- Click `Add Interface`.
+
+- Enter a name, for example, IP1-EdgeNode1.
+
+- Enter the IP address 192.168.50.11/24.
+
+- In the `Connected To (Segment)` field, select Uplink-segment-1.
+
+- In the Edge Node field, select `Edge-1`.
+
+- Save the changes.
+
+- Repeat steps 8-13 to configure a second interface called IP2-EdgeNode2. The IP address 
+  should be 192.168.50.12/24. The `Edge Node` should be `Edge-2`.
+
+- In the `HA VIP Configuration` field, click `Set` to create a virtual IP for the tier-0 
+  gateway.
+
+- Enter the IP address 192.168.50.13/24.
+
+- Select the interfaces IP1-EdgeNode1 and IP2-EdgeNode2.
+
+- Save the changes.
+
+
+### Configure Routing on the Physical Router and Tier-0 Gateway
+
+**Procedure**
+
+- On the physical router, configure a static route to the subnets 192.168.1.0/24 and 192.168.2.0/24 via 192.168.50.13,
+  which is the virtual IP address of the tier-0 gateway's external interface.
+
+- In NSX Manager, go to Networking > Tier-0 Gateways.
+
+- Edit T0-gateway-1.
+
+- Under Routing > Static Routes, click Set and click Add Static Route.
+
+- In the Name field, enter default.
+
+- In the Network field, enter 0.0.0.0/0.
+
+- Click Set Next Hops.
+
+- In the IP Address field, enter 192.168.50.1.
+
+- Click Add.
+
+- Save the changes.
+
+
+Finally, we've deployed Tier-0 router and connected NSX-T backed overlay segments to your physical network. 
+
+Implement the following to test east-west and north-south connectivity:
+
+- Ping WEB-VM-1 from LB-VM-1 and vice versa
+- Ping the downlink interface of the physical router from WEB-VM-1.
+
+
+Please note for VMs deployed to NSX-T overlay segments, ensure the network adapter is set to correct overlay segment.
+
+
+-----
+
+
+
 
 ### Next Steps
 
-NSX-T Edge Nodes Setup
+vSphere with Kubernetes
 
 -----
 
