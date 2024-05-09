@@ -1277,7 +1277,7 @@ C:\VMware-ovftool-4.4.3-18663434-win.x86_64\ovftool>ovftool
 --prop:"nsx_cli_passwd_0=password-cli" 
 --prop:"nsx_cli_audit_passwd_0=password-cli-audit" 
 --prop:nsx_hostname=nsx
---prop:mgrhostname01="victor.odeghe@tretennetworks.com" 
+--prop:mgrhostname01="mgr@gmail.com" 
 --prop:nsx_allowSSHRootLogin=True 
 --prop:nsx_role="NSX Manager" 
 --X:logFile=/root/ovftool/ovf-folder.log 
