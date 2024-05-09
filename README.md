@@ -680,10 +680,10 @@ This disk will be used to setup NFS datastore.
 - In the popped up `Add Hardware Wizard`, select `Hard Disk` hardware type and click `Next`
 - Select `SCSI` as virtual disk type and click `Next`
 - Select `Create a new virtual disk` and click `Next`
-- Set `Maximum disk size` at 100GB and choose `store virtual disk as a single file`
+- Set `Maximum disk size` at 200GB and choose `store virtual disk as a single file`
 - Click `Finish`
 
-Notice new `Hard Disk(SCSI)` with size 100GB added to hardware inventory.
+Notice new `Hard Disk(SCSI)` with size 200GB added to hardware inventory.
 
 Repeat steps above to add another `Hard Disk(SCSI)` with size 5GB.
 
@@ -720,7 +720,7 @@ Implement the following steps to create XFS partition on disk for NFS:
 
 7. For `Second sector` prompt, press `Enter` again to use default value.
 
-   Note statement of `Partition 1 of type Linux and of size 100GB is set`
+   Note statement of `Partition 1 of type Linux and of size 200GB is set`
 
 8. Type `w` and press `Enter` to write this new partition to the disk and ensure partition table is re-read.
 
@@ -754,7 +754,7 @@ Implement the following steps to create XFS partition on disk for Heartbeat:
 
 7. For `Second sector` prompt, press `Enter` again to use default value.
 
-   Note statement of `Partition 1 of type Linux and of size 100GB is set`
+   Note statement of `Partition 1 of type Linux and of size 200GB is set`
 
 8. Type `w` and press `Enter` to write this new partition to the disk and ensure partition table is re-read.
 
