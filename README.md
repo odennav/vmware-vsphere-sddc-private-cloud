@@ -1171,69 +1171,57 @@ Note the following resources we'll need to configure NSX-T for this project:
 
 This networking information is required when installing NSX.
 
-The subnet mask is /24 for all the IP addresses below
- ____________________________________________________________________________________________________________
-|                      |                                                                                     |
-|______SETTING_________|_____________________________________NOTES___________________________________________|
-|                      |                                                                                     |
-|  VLAN 10             |   Management traffic                                                                | 
-|                      |                                                                                     |
-|  VLAN 20	           |   For NSX TEP traffic	                                                             |
-|                      |                                                                                     |
-|  VLAN 50	           |   For traffic between the tier-0 gateway and physical router(NSX edge traffic       |
-|                      |                                                                                     |
-|  DPortGroup-MGMT     |   vCenter PG-mgmt backed by VLAN 10 	                                             |
-|                      |                                                                                     |
-|  Management subnet   |   192.168.10.0/24, default gateway: 192.168.10.1, subnet mask: 255.255.255.0        |
-|       	           |                                                                                     |
-|                      |                                                                                     |
-|  Tunnel Endpoint(TEP)|   subnet 192.168.20.0/24, default gateway: 192.168.20.1, subnet-mask:255.255.255.0  |
-|                      |                                                                                     |  	
-|  vCenter IP address  |   192.168.10.10 (VLAN 10)                                                           |	
-|                      |                                                                                     |
-|  ESXi-1 IP address   |   192.168.10.11 (VLAN 10), 192.168.20.11 (VLAN 20)                                  |
-|	                   |                                                                                     |
-|  ESXi-2 IP address   |   192.168.10.12 (VLAN 10), 192.168.20.12 (VLAN 20)                                  |
-|	                   |                                                                                     |
-|  ESXi-3 IP address   |   192.168.10.13 (VLAN 10), 192.168.20.13 (VLAN 20)                                  |
-|                      |                                                                                     |
-|  ESXi-4 IP address   |   192.168.10.14 (VLAN 10)                                                           |
-|	                   |                                                                                     |
-|  NSX-mgr-1 IP address|   192.168.10.15 (VLAN 10)                                                           |	
-|                      |                                                                                     |
-|  NSX-mgr-2 IP address|   192.168.10.16 (VLAN 10)                                                           |	
-|                      |                                                                                     |
-|  Edge-1 IP address   |   192.168.10.17 (VLAN 10), 192.168.20.17 (VLAN 20)                                  |	
-|                      |                                                                                     |
-|  Edge-2 IP address   |   192.168.10.18 (VLAN 10), 192.168.20.18 (VLAN 20)                                  |	
-|                      |                                                                                     |
-|  Physical router's   |   192.168.50.1 (VLAN 50)                                                            |
-|  downlink IP address |	                                                                                 |                        	
-|                      |                                                                                     |
-|  Tier-0 gateway's    |   192.168.50.11 (VLAN 50)                                                           |	
-|  external-interface  |                                                                                     |
-|  IP address on Edge-1|                                                                                     |	
-|                      |                                                                                     |
-|  Tier-0 gateway's    |   192.168.50.12 (VLAN 50)                                                           |
-|  external interface  |                                                                                     |
-|  IP address on Edge-2|                                                                                     |		
-|                      |                                                                                     |
-|  Tier-0 gateway's    |   192.168.50.13 (VLAN 50)                                                           |	
-|  virtual IP (VIP)    |                                                                                     |	
-|                      |                                                                                     |
-|  LB1.1 subnet	       |   192.168.1.0/24                                                                    |
-|                      |                                                                                     |
-|  LB-VM-1 IP address  |   192.168.1.2                                                                       |
-|                      |                                                                                     | 
-|  WEB1.1 subnet       |   192.168.2.0/24                                                                    |	
-|                      |                                                                                     |
-|  WEB-VM-1 IP address |   192.168.2.2                                                                       |	
-|                      |                                                                                     |
-|  WEB-VM-2 IP address |   192.168.2.3                                                                       |	
-|                      |                                                                                     |
-|  WEB-VM-3 IP address |   192.168.2.4                                                                       |
-|______________________|_____________________________________________________________________________________|
+The subnet mask is /24 for all the IP addresses below:
 
+VLAN 10 -----------------------> Management traffic 
+
+VLAN 20 -----------------------> For NSX TEP traffic	                                                            
+
+VLAN 50 -----------------------> For traffic between the tier-0 gateway and physical router(NSX edge traffic      
+
+DPortGroup-MGMT ---------------> vCenter PG-mgmt backed by VLAN 10 	                                         
+
+Management subnet -------------> 192.168.10.0/24, default gateway: 192.168.10.1, subnet mask: 255.255.255.0       
+
+Tunnel Endpoint(TEP) ----------> subnet 192.168.20.0/24, default gateway: 192.168.20.1, subnet-mask:255.255.255.0 
+ 	
+vCenter IP address ------------> 192.168.10.10 (VLAN 10)                                           	
+
+ESXi-1 IP address -------------> 192.168.10.11 (VLAN 10), 192.168.20.11 (VLAN 20)   
+
+ESXi-2 IP address -------------> 192.168.10.12 (VLAN 10), 192.168.20.12 (VLAN 20)
+                                                                                    
+ESXi-3 IP address -------------> 192.168.10.13 (VLAN 10), 192.168.20.13 (VLAN 20)  
+
+ESXi-4 IP address -------------> 192.168.10.14 (VLAN 10)
+
+NSX-mgr-1 IP address ----------> 192.168.10.15 (VLAN 10) 
+
+NSX-mgr-2 IP address ----------> 192.168.10.16 (VLAN 10) 
+
+Edge-1 IP address -------------> 192.168.10.17 (VLAN 10), 192.168.20.17 (VLAN 20)	
+
+Edge-2 IP address -------------> 192.168.10.18 (VLAN 10), 192.168.20.18 (VLAN 20)        
+
+Physical router's downlink IP address --------------------------> 192.168.50.1 (VLAN 50)                                                             	                                                                               |                        	
+
+Tier-0 gateway's external-interface IP address on Edge-1 -------> 192.168.50.11 (VLAN 50)                                                           
+                                                                                                                                                                       	
+Tier-0 gateway's external interface IP address on Edge-2 -------> 192.168.50.12 (VLAN 50)
+
+Tier-0 gateway's virtual IP ------------------------------------> 192.168.50.13 (VLAN 50)                                                         
+
+LB1.1 subnet ---------------------------------------------------> 192.168.1.0/24                                                                    
+
+LB-VM-1 IP address ---------------------------------------------> 192.168.1.2                                                                   
+
+WEB1.1 subnet --------------------------------------------------> 192.168.2.0/24                                                              
+
+WEB-VM-1 IP address --------------------------------------------> 192.168.2.2                                                                   
+
+WEB-VM-2 IP address --------------------------------------------> 192.168.2.3                                                                     	
+
+WEB-VM-3 IP address --------------------------------------------> 192.168.2.4                                                                    
 
 
 ### Deploy NSX-T Manager
@@ -1497,32 +1485,59 @@ Edge VM will have three or more interfaces:
 Assign the following:
 
 Name -------------------> Edge-1
+
 Host name --------------> edge1.nsx.local
+
 Form Factor ------------> Select the appropriate edge node size.
+
 CLI User Name ----------> admin
+
 CLI Password -----------> ***********	
+
 Allow SSH Login	--------> Select option based on your datacenter policy.
+
 System Root Password----> **************	
+
 Allow Root SSH Login ---> Select option based on your datacenter policy.
+
 Audit User Name	--------> audit 
+
 Audit Password	--------> ********
+
 Compute Manager	--------> vcenter
+
 Cluster	----------------> odennav-dc-cluster
+
 Host -------------------> 192.168.10.11 
+
 Datastore --------------> nfs-datastore-1
+
 IP Assignment ----------> Static
+
 Management IP ----------> 192.168.10.17
+
 Default Gateway --------> 192.168.10.1
+
 Management Interface ---> DPortGroup-MGMT
+
 DNS Servers ------------> 192.168.36.2
+
 NTP Servers ------------> pool.ntp.org
+
 Edge Switch name -------> nsx-overlay, nsx-vlan
+
 Transport Zone ---------> nsx-overlay-transportzone, nsx-vlan-transport-zone
+
 Uplink Profile ---------> Overlay-Uplink-Profile
+
 Teaming Policy(Uplinks)-> DPortGroup-TEP(uplink-1), DPortGroup-EDGE(uplink-1)
+
 IP Assignment ----------> Use Static IP List
+
 Static IP List ---------> 192.168.20.17
+
 Gateway ----------------> 192.168.20.1
+
 Subnet Mask ------------> 255.255.255.0
 
 Wait until the Configuration State column displays `Success`.
