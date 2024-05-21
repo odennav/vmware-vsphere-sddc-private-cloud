@@ -112,20 +112,4 @@ output "hb_datastore2" {
   value = module.datastore_nfs.hb_datastore2_id
 }
 
-module "vm_ubuntu" {
-  source = "./modules/vm_ubuntu"
-}
 
-output "vm_ubuntu" {
-  description = "ubuntu server vm template"  
-  value = module.vm_ubuntu.ubuntu_details
-}
-
-module "vm_windows" {
-  source = "./modules/vm_windows"
-}
-
-output "vm_windows" {
-  description = "windows server vm template"  
-  value = module.vm_windows.windows_details
-}
