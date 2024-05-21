@@ -3,7 +3,7 @@ variable "user" {
 }
 
 variable "password" {
-  default = "Csgmtehmtrpe61395$%"  
+  default = "**********"  
 }
 
 variable "vcenter" {
