@@ -1071,7 +1071,7 @@ build {
 Initialize your Packer configuration
 
 ```bash
-cd ~/vmware-vsphere-/packer/
+cd ~/vmware-vsphere-sddc-private-cloud/packer/
 packer init 
 ```
 
@@ -1097,8 +1097,33 @@ View `packer_windows2019` and `packer_ubuntu20` VM templates created in vSphere 
 
 **Provision VMs to vSphere Custer**
 
+Add the following modules required to provision linux and windows server vm to vsphere environment.
+
+Copy modules from `vm_modules` file and append to `main.tf` as shown below:
+
+```yaml
+module "vm_ubuntu" {
+  source = "./modules/vm_ubuntu"
+}
+
+output "vm_ubuntu" {
+  description = "ubuntu server vm template"  
+  value = module.vm_ubuntu.ubuntu_details
+}
+
+module "vm_windows" {
+  source = "./modules/vm_windows"
+}
+
+output "vm_windows" {
+  description = "windows server vm template"  
+  value = module.vm_windows.windows_details
+}
+```
+
 Format your configuration
 ```bash
+cd ~/vmware-vsphere-sddc-private-cloud/terraform-manifest
 terraform fmt
 ```
 
@@ -1107,14 +1132,14 @@ Validate your configuration
 terraform validate 
 ```
 
-Create an execution plan that describes the planned changes to the vSphere infrastructure
+Target vm modules for planned changes to the vSphere infrastructure
 ```bash
-terraform plan 
+terraform plan -target=module.vm_ubuntu -target=module.vm_windows
 ```
 
 Apply the configuration 
 ```bash
-terraform apply 
+terraform apply -target=module.vm_ubuntu -target=module.vm_windows
 ```
 
 -----
