@@ -94,22 +94,22 @@ module "datastores_nfs" {
 
 output "nfs_datastore1" {
   description = "first nfs datastore"  
-  value = module.datastore_nfs.nfs_datastore1_id
+  value = module.datastores_nfs.nfs_datastore1_id
 }
 
 output "hb_datastore1" {
   description = "first hb datastore"  
-  value = module.datastore_nfs.hb_datastore1_id
+  value = module.datastores_nfs.hb_datastore1_id
 }
 
 output "nfs_datastore2" {
   description = "second nfs datastore"  
-  value = module.datastore_nfs.nfs_datastore2_id
+  value = module.datastores_nfs.nfs_datastore2_id
 }
 
 output "hb_datastore2" {
   description = "second hb datastore"  
-  value = module.datastore_nfs.hb_datastore2_id
+  value = module.datastores_nfs.hb_datastore2_id
 }
 
 
