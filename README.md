@@ -198,7 +198,7 @@ We're installing and configuring three ESXi hosts, hence you'll have to repeat t
 
 Also note when you're configuring subsequent ESXi, remember to change the `Hostname` in `DNS Configuration` section. For example second and third ESXi will be named `esxi02` and `esxi03` respectively.
 
-Please note the hardware specifications for esxi02 will be different and bigger than other hosts because we'll deploy the vcsa on it.
+Please note the hardware specifications for `esxi02` will be different and bigger than other hosts because we'll deploy the vcsa on it.
 
 -----
 
